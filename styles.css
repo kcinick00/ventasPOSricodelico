@@ -1,5 +1,6 @@
 /* =========================================================
-   RICODELICO - Estilos v5.0
+   RICODELICO - Estilos v6.0
+   Layout 65/35 + Categorías más grandes
    ========================================================= */
 
 :root {
@@ -120,10 +121,10 @@ header::before {
   border-color: var(--accent);
 }
 
-/* ===== LAYOUT ===== */
+/* ===== LAYOUT (65% categorías / 35% recibo) ===== */
 .layout {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 65fr 35fr;
   gap: 12px;
   padding: 12px 16px;
   max-width: 1600px;
@@ -133,23 +134,7 @@ header::before {
   min-height: 0;
 }
 
-@media (max-width: 900px) {
-  html, body {
-    overflow: auto;
-    height: auto;
-    min-height: 100dvh;
-  }
-  body {
-    min-height: 100dvh;
-    display: block;
-  }
-  .layout {
-    display: block;
-    padding: 12px;
-  }
-}
-
-/* ===== CATEGORÍAS ===== */
+/* ===== CATEGORÍAS MÁS GRANDES ===== */
 .col-categorias {
   overflow-y: auto;
   padding-right: 8px;
@@ -192,8 +177,8 @@ header::before {
 
 .categorias-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
 }
 
 .categoria {
@@ -202,49 +187,50 @@ header::before {
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 6px;
-  padding: 14px 8px;
+  gap: 10px;
+  padding: 18px 12px;
   background: var(--card);
   border: 2px solid var(--border);
-  border-radius: 12px;
+  border-radius: 14px;
   cursor: pointer;
   transition: all 0.2s;
   box-shadow: var(--shadow-sm);
-  min-height: 110px;
+  min-height: 150px;
   position: relative;
 }
 
 .categoria:hover, .categoria:active {
   border-color: var(--accent);
   background: linear-gradient(180deg, rgba(180, 255, 57, 0.08) 0%, var(--card) 100%);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 .categoria-emoji {
-  font-size: 32px;
+  font-size: 48px;
   line-height: 1;
 }
 
 .categoria-nombre {
-  font-size: 11px;
-  font-weight: 700;
-  line-height: 1.2;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
   color: var(--text);
+  letter-spacing: 0.3px;
 }
 
 .categoria-count {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   background: var(--accent);
   color: #0F0F0F;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 900;
-  padding: 2px 6px;
-  border-radius: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
 }
 
-/* ===== COLUMNA PEDIDO ===== */
+/* ===== COLUMNA PEDIDO (35%) ===== */
 .col-pedido {
   display: flex;
   flex-direction: column;
@@ -776,7 +762,7 @@ header::before {
 .toast-remove .toast-icon { background: var(--orange); color: white; }
 .toast-info .toast-icon { background: #60A5FA; color: white; }
 
-/* ===== ADMIN PRODUCTOS ===== */
+/* ===== ADMIN ===== */
 .admin-lista {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -786,7 +772,8 @@ header::before {
   padding: 5px;
 }
 
-.admin-producto-item {
+.admin-producto-item,
+.admin-categoria-item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -798,25 +785,35 @@ header::before {
   transition: all 0.2s;
 }
 
-.admin-producto-item:hover {
+.admin-producto-item:hover,
+.admin-categoria-item:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
 }
 
-.admin-producto-item img {
-  width: 60px;
-  height: 60px;
+.admin-producto-item img,
+.admin-categoria-item img,
+.admin-categoria-item .admin-cat-emoji {
+  width: 50px;
+  height: 50px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--bg-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
 }
 
-.admin-producto-info {
+.admin-producto-info,
+.admin-categoria-info {
   flex: 1;
   min-width: 0;
 }
 
-.admin-producto-nombre {
+.admin-producto-nombre,
+.admin-categoria-nombre {
   font-weight: 700;
   font-size: 14px;
   color: var(--text);
@@ -825,7 +822,8 @@ header::before {
   text-overflow: ellipsis;
 }
 
-.admin-producto-cat {
+.admin-producto-cat,
+.admin-categoria-meta {
   font-size: 11px;
   color: var(--text-muted);
   margin: 2px 0;
@@ -927,7 +925,7 @@ header::before {
 /* ===== UTILIDADES ===== */
 .hidden { display: none !important; }
 
-/* ===== SCROLLBARS GENERALES ===== */
+/* ===== SCROLLBARS ===== */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -947,73 +945,45 @@ header::before {
 }
 
 /* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  html, body {
+    overflow: auto;
+    height: auto;
+    min-height: 100dvh;
+  }
+  body {
+    min-height: 100dvh;
+    display: block;
+  }
+  .layout {
+    display: block;
+    padding: 12px;
+  }
+  .categorias-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .categoria {
+    min-height: 120px;
+    padding: 14px 8px;
+  }
+  .categoria-emoji {
+    font-size: 38px;
+  }
+  .categoria-nombre {
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 600px) {
   .brand h1 { font-size: 22px; }
   .brand p { font-size: 9px; }
   .tasa-box { padding: 4px 8px; }
   .tasa-box label { font-size: 9px; }
   .tasa-box input { width: 80px; font-size: 12px; }
-  .categorias-grid {
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  }
-  .categoria {
-    min-height: 90px;
-    padding: 10px 6px;
-  }
-  .categoria-emoji { font-size: 26px; }
-  .categoria-nombre { font-size: 10px; }
   .monto-display { font-size: 28px; }
   .teclado-numerico button { padding: 12px 0; font-size: 18px; }
   .admin-lista {
     grid-template-columns: 1fr;
   }
-}
-
-/* ===== ADMIN CATEGORÍAS ===== */
-.admin-categoria-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.admin-categoria-item:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.admin-categoria-item img,
-.admin-categoria-item .admin-cat-emoji {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 10px;
-  background: var(--bg-soft);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  flex-shrink: 0;
-}
-
-.admin-categoria-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.admin-categoria-nombre {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--text);
-}
-
-.admin-categoria-meta {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin-top: 2px;
 }
