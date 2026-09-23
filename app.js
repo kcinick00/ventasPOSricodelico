@@ -647,8 +647,12 @@ async function imprimirTicket() {
   printWindow.document.close();
 
   await guardarEnHistorial({ numero, fecha, hora, items: [...pedido], totalUSD, totalBs, tasaBCV });
-  showToast("Ticket listo. Toca IMPRIMIR en la nueva ventana.", "success");
-}
+  // ✅ Limpiar el pedido automáticamente después de imprimir
+  pedido = [];
+  renderPedido();
+  actualizarTotales();
+  
+  showToast("✅ Ticket generado. Pedido listo para el siguiente cliente.", "success");}
 
 // =========================================================
 // HISTORIAL DE FACTURAS
