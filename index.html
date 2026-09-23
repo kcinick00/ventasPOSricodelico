@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
-<title>RICODELICO - Caja</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
 <meta name="theme-color" content="#0F0F0F">
+<title>RICODELICO - Caja</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="imagenes/default.png">
 <link rel="apple-touch-icon" href="imagenes/default.png">
@@ -14,6 +15,32 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<script>
+  // =========================================================
+  // BLOQUEO TOTAL DE ZOOM (doble tap y pinza)
+  // =========================================================
+  let lastTouchEnd = 0;
+  document.addEventListener('touchend', function(event) {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+      event.preventDefault();
+    }
+    lastTouchEnd = now;
+  }, { passive: false });
+  
+  // Bloquear zoom con pinza (dos dedos)
+  document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+  });
+  
+  // Bloquear doble tap en iOS
+  document.addEventListener('touchstart', function(event) {
+    if (event.touches.length > 1) {
+      event.preventDefault();
+    }
+  }, { passive: false });
+</script>
 
 <header>
   <div class="brand">
@@ -134,7 +161,7 @@
           <button onclick="presionarTecla('7')">7</button>
           <button onclick="presionarTecla('8')">8</button>
           <button onclick="presionarTecla('9')">9</button>
-          <button onclick="presionarTecla('.')">.</button>
+          <button onclick="presionarTecla('⌫')" class="btn-borrar">⌫</button>
           <button onclick="presionarTecla('0')">0</button>
           <button onclick="presionarTecla('C')" class="btn-clear">C</button>
         </div>
@@ -421,49 +448,49 @@
       </label>
       <input type="range" id="sliderCatNombre" min="12" max="30" value="17" 
              oninput="cambiarTamanoLetra('categoria-nombre', this.value, 'valCatNombre')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         📦 Subproductos: <span id="valSubNombre" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">20px</span>
       </label>
       <input type="range" id="sliderSubNombre" min="14" max="34" value="20"
              oninput="cambiarTamanoLetra('subproducto', this.value, 'valSubNombre')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         🛒 Productos en pedido: <span id="valPedidoNombre" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">15px</span>
       </label>
       <input type="range" id="sliderPedidoNombre" min="12" max="24" value="15"
              oninput="cambiarTamanoLetra('pedido-nombre', this.value, 'valPedidoNombre')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         💰 Totales USD/Bs: <span id="valTotales" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">22px</span>
       </label>
       <input type="range" id="sliderTotales" min="16" max="36" value="22"
              oninput="cambiarTamanoLetra('total-value', this.value, 'valTotales')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         💵 Monto en teclado: <span id="valMontoDisplay" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">48px</span>
       </label>
       <input type="range" id="sliderMontoDisplay" min="30" max="80" value="48"
              oninput="cambiarTamanoLetra('monto-display', this.value, 'valMontoDisplay')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         🏷️ Título de modal: <span id="valModalTitulo" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">30px</span>
       </label>
       <input type="range" id="sliderModalTitulo" min="20" max="44" value="30"
              oninput="cambiarTamanoLetra('modal-header h2', this.value, 'valModalTitulo')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
         📋 Título de sección: <span id="valSeccionTitulo" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">24px</span>
       </label>
       <input type="range" id="sliderSeccionTitulo" min="16" max="36" value="24"
              oninput="cambiarTamanoLetra('section-title', this.value, 'valSeccionTitulo')"
-             style="width: 100%; height: 8px; cursor: pointer;">
+             style="width: 100%;">
 
       <div style="display: flex; gap: 10px; margin-top: 30px;">
         <button onclick="resetearLetras()"
