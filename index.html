@@ -18,23 +18,15 @@
 
 <script>
   // =========================================================
-  // BLOQUEO TOTAL DE ZOOM (doble tap y pinza)
+  // BLOQUEO DE ZOOM (sin afectar botones)
   // =========================================================
-  let lastTouchEnd = 0;
-  document.addEventListener('touchend', function(event) {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) {
-      event.preventDefault();
-    }
-    lastTouchEnd = now;
-  }, { passive: false });
   
   // Bloquear zoom con pinza (dos dedos)
   document.addEventListener('gesturestart', function(e) {
     e.preventDefault();
   });
   
-  // Bloquear doble tap en iOS
+  // Bloquear zoom con múltiples dedos
   document.addEventListener('touchstart', function(event) {
     if (event.touches.length > 1) {
       event.preventDefault();
