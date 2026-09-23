@@ -1,6 +1,6 @@
 // =========================================================
-// app.js - RICODELICO CAJA v6.0
-// Layout 65/35 + Formato centavos + Buscador solo en Inventario
+// app.js - RICODELICO CAJA v7.0
+// Impresión optimizada para tablet + todos los cambios
 // =========================================================
 
 // =========================================================
@@ -47,7 +47,7 @@ function showToast(message, type = "success") {
     toast.classList.remove("toast-visible");
     toast.classList.add("toast-hiding");
     setTimeout(() => toast.remove(), 300);
-  }, 2000);
+  }, 2500);
 }
 
 // =========================================================
@@ -175,7 +175,7 @@ function guardarTasa(valor) {
 }
 
 // =========================================================
-// SELECCIONAR CATEGORÍA (buscador solo en Inventario)
+// SELECCIONAR CATEGORÍA
 // =========================================================
 async function seleccionarCategoria(cat) {
   esCategoriaInventario = cat.nombre.toLowerCase().includes('inventario');
@@ -299,13 +299,12 @@ function renderSubproductos(lista) {
   }
 
   contenedor.innerHTML = lista.map(p => `
-    <div class="subproducto" onclick="abrirModalMontoConPrecio(${p.id}, ${esCategoriaInventario})"
-         style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 80px; text-align: center;">
-      <div style="font-weight: 700; font-size: 13px; line-height: 1.3;">
+    <div class="subproducto" onclick="abrirModalMontoConPrecio(${p.id}, ${esCategoriaInventario})">
+      <div style="font-weight: 800; font-size: 18px; line-height: 1.35;">
         ${p.nombre}
       </div>
       ${p.precioUSD > 0
-        ? `<div style="margin-top: 6px; color: var(--accent); font-weight: 900; font-size: 14px; font-family: 'JetBrains Mono', monospace;">$${p.precioUSD.toFixed(2)}</div>`
+        ? `<div style="margin-top: 8px; color: var(--accent); font-weight: 900; font-size: 18px; font-family: 'JetBrains Mono', monospace;">$${p.precioUSD.toFixed(2)}</div>`
         : ''}
     </div>
   `).join("");
@@ -474,7 +473,7 @@ function limpiarPedido() {
 }
 
 // =========================================================
-// IMPRIMIR TICKET
+// IMPRIMIR TICKET (compatible con Android/Tablet)
 // =========================================================
 async function imprimirTicket() {
   if (pedido.length === 0) {
@@ -507,30 +506,111 @@ async function imprimirTicket() {
 
   const ticketHTML = `
     <!DOCTYPE html>
-    <html><head><meta charset="UTF-8"><title>Recibo RICODELICO</title>
+    <html><head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo RICODELICO</title>
     <style>
       @page { size: 80mm auto; margin: 0; }
       * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Arial', sans-serif; font-size: 12px; font-weight: bold; color: #000; background: #fff; width: 80mm; line-height: 1.2; padding: 6px 8px; }
-      .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 6px; }
-      .header h1 { font-size: 16px; font-weight: 900; letter-spacing: 1px; }
-      .header p { font-size: 10px; font-weight: bold; margin: 1px 0; }
-      .info { font-size: 11px; font-weight: bold; margin-bottom: 6px; }
-      .info-row { display: flex; justify-content: space-between; padding: 1px 0; }
-      .info-row .label { font-weight: 900; }
-      .separator { border-top: 1px dashed #000; margin: 6px 0; }
-      table { width: 100%; border-collapse: collapse; margin: 4px 0; }
-      table th { font-size: 11px; font-weight: 900; text-align: left; border-bottom: 1px solid #000; padding: 3px 0; text-transform: uppercase; }
-      table th.usd, table th.bs { text-align: right; }
-      table td { padding: 2px 0; font-size: 11px; font-weight: bold; vertical-align: top; }
-      table td.usd, table td.bs { text-align: right; font-weight: 900; }
-      table td.prod { text-transform: uppercase; }
-      .total { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 900; padding: 6px 0; margin-top: 4px; border-top: 2px solid #000; border-bottom: 2px solid #000; }
-      .footer { text-align: center; font-size: 10px; font-weight: bold; margin-top: 8px; padding-top: 6px; border-top: 1px dashed #000; }
-      .gracias { font-size: 13px; font-weight: 900; margin-top: 4px; }
-      .tasa-ref { font-size: 10px; text-align: center; margin-top: 4px; }
-    </style></head>
+      
+      html, body {
+        background: #E5E5E5;
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .barra-acciones {
+        position: sticky;
+        top: 0;
+        background: #0F0F0F;
+        padding: 14px;
+        display: flex;
+        gap: 10px;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      }
+      
+      .btn-imprimir {
+        flex: 2;
+        background: #B4FF39;
+        color: #000;
+        border: none;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 900;
+        cursor: pointer;
+        letter-spacing: 1px;
+      }
+      
+      .btn-cerrar {
+        flex: 1;
+        background: #333;
+        color: #FFF;
+        border: none;
+        padding: 18px;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      
+      .ticket {
+        width: 80mm;
+        max-width: 100%;
+        margin: 16px auto;
+        background: #FFF;
+        padding: 10px 12px;
+        color: #000;
+        font-size: 13px;
+        font-weight: bold;
+        line-height: 1.3;
+      }
+      
+      .ticket .header { text-align: center; border-bottom: 2px solid #000; padding-bottom: 8px; margin-bottom: 8px; }
+      .ticket .header h1 { font-size: 18px; font-weight: 900; letter-spacing: 1px; }
+      .ticket .header p { font-size: 11px; font-weight: bold; margin: 2px 0; }
+      .ticket .info { font-size: 12px; font-weight: bold; margin-bottom: 8px; }
+      .ticket .info-row { display: flex; justify-content: space-between; padding: 2px 0; }
+      .ticket .info-row .label { font-weight: 900; }
+      .ticket .separator { border-top: 1px dashed #000; margin: 8px 0; }
+      .ticket table { width: 100%; border-collapse: collapse; margin: 6px 0; }
+      .ticket table th { font-size: 12px; font-weight: 900; text-align: left; border-bottom: 1px solid #000; padding: 4px 0; text-transform: uppercase; }
+      .ticket table th.usd, .ticket table th.bs { text-align: right; }
+      .ticket table td { padding: 3px 0; font-size: 12px; font-weight: bold; vertical-align: top; }
+      .ticket table td.usd, .ticket table td.bs { text-align: right; font-weight: 900; }
+      .ticket table td.prod { text-transform: uppercase; }
+      .ticket .total { display: flex; justify-content: space-between; align-items: center; font-size: 16px; font-weight: 900; padding: 8px 0; margin-top: 6px; border-top: 2px solid #000; border-bottom: 2px solid #000; }
+      .ticket .footer { text-align: center; font-size: 11px; font-weight: bold; margin-top: 10px; padding-top: 8px; border-top: 1px dashed #000; }
+      .ticket .gracias { font-size: 15px; font-weight: 900; margin-top: 6px; }
+      .ticket .tasa-ref { font-size: 11px; text-align: center; margin-top: 6px; }
+      
+      @media print {
+        html, body {
+          background: #FFF;
+          width: 80mm;
+          max-width: 80mm;
+        }
+        .barra-acciones { display: none !important; }
+        .ticket {
+          margin: 0;
+          padding: 4px 6px;
+          width: 80mm;
+          max-width: 80mm;
+          box-shadow: none;
+        }
+      }
+    </style>
+    </head>
     <body>
+    
+    <div class="barra-acciones">
+      <button class="btn-imprimir" onclick="window.print()">🖨️ IMPRIMIR</button>
+      <button class="btn-cerrar" onclick="window.close()">✕ CERRAR</button>
+    </div>
+    
+    <div class="ticket">
       <div class="header">
         <h1>RICODELICO, C.A.</h1>
         <p>J-50395785-9</p>
@@ -550,15 +630,24 @@ async function imprimirTicket() {
       <div class="total"><span>Total Bs</span><span>${totalBs.toLocaleString("es-VE", {minimumFractionDigits: 2, maximumFractionDigits: 2})} Bs.</span></div>
       <div class="tasa-ref">Tasa REF.: ${tasaBCV.toLocaleString("es-VE", {minimumFractionDigits: 2, maximumFractionDigits: 2})} Bs.</div>
       <div class="footer"><p class="gracias">GRACIAS POR SU COMPRA!!!</p></div>
+    </div>
+    
     </body></html>
   `;
 
-  const printWindow = window.open("", "_blank", "width=400,height=600");
+  const printWindow = window.open("", "_blank", "width=500,height=800");
+  
+  if (!printWindow) {
+    showToast("⚠️ Permite las ventanas emergentes para imprimir", "remove");
+    return;
+  }
+  
+  printWindow.document.open();
   printWindow.document.write(ticketHTML);
   printWindow.document.close();
 
   await guardarEnHistorial({ numero, fecha, hora, items: [...pedido], totalUSD, totalBs, tasaBCV });
-  showToast("Ticket generado", "success");
+  showToast("Ticket listo. Toca IMPRIMIR en la nueva ventana.", "success");
 }
 
 // =========================================================
@@ -654,7 +743,7 @@ async function cargarHistorialPorFecha(fechaISO) {
   document.getElementById("resumen-bs").textContent = fmtBs(totalBs);
 
   if (facturas.length === 0) {
-    lista.innerHTML = '<div class="empty-msg" style="text-align: center; padding: 30px; color: #888;">Sin facturas en esta fecha</div>';
+    lista.innerHTML = '<div class="empty-msg" style="text-align: center; padding: 30px; color: #888; font-size: 15px;">Sin facturas en esta fecha</div>';
     return;
   }
 
@@ -685,7 +774,7 @@ function abrirDetalleFacturaHistorial(facturaId) {
   if (!factura) return;
 
   let itemsHTML = factura.items.map(item => `
-    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px;">
+    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px;">
       <span style="font-weight: 600;">${item.nombre}</span>
       <span style="font-family: 'JetBrains Mono', monospace; color: var(--accent); font-weight: 800;">
         ${fmtUSD(item.montoUSD)}
@@ -695,41 +784,41 @@ function abrirDetalleFacturaHistorial(facturaId) {
 
   const detalleHTML = `
     <div style="padding: 10px;">
-      <div style="background: var(--bg); padding: 12px; border-radius: 10px; margin-bottom: 14px;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-muted); font-size: 11px; font-weight: 700;">FACTURA</span>
-          <span style="font-weight: 900; color: var(--accent);">#${factura.numero}</span>
+      <div style="background: var(--bg); padding: 14px; border-radius: 10px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-muted); font-size: 12px; font-weight: 700;">FACTURA</span>
+          <span style="font-weight: 900; color: var(--accent); font-size: 16px;">#${factura.numero}</span>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="color: var(--text-muted); font-size: 11px; font-weight: 700;">FECHA</span>
-          <span>${factura.fecha} ${factura.hora}</span>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="color: var(--text-muted); font-size: 12px; font-weight: 700;">FECHA</span>
+          <span style="font-size: 15px;">${factura.fecha} ${factura.hora}</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--text-muted); font-size: 11px; font-weight: 700;">TASA BCV</span>
-          <span>${fmtBs(factura.tasaBCV).replace(' Bs', '')} Bs/USD</span>
+          <span style="color: var(--text-muted); font-size: 12px; font-weight: 700;">TASA BCV</span>
+          <span style="font-size: 15px;">${fmtBs(factura.tasaBCV).replace(' Bs', '')} Bs/USD</span>
         </div>
       </div>
       
-      <div style="margin-bottom: 14px;">
-        <div style="font-size: 11px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 13px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
           Productos (${factura.items.length})
         </div>
         ${itemsHTML}
       </div>
       
-      <div style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); padding: 14px; border-radius: 10px; color: #0F0F0F;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-          <span style="font-weight: 800; font-size: 12px;">TOTAL USD</span>
-          <span style="font-weight: 900; font-family: 'JetBrains Mono', monospace; font-size: 16px;">${fmtUSD(factura.totalUSD)}</span>
+      <div style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%); padding: 16px; border-radius: 10px; color: #0F0F0F;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-weight: 800; font-size: 14px;">TOTAL USD</span>
+          <span style="font-weight: 900; font-family: 'JetBrains Mono', monospace; font-size: 18px;">${fmtUSD(factura.totalUSD)}</span>
         </div>
         <div style="display: flex; justify-content: space-between;">
-          <span style="font-weight: 800; font-size: 12px;">TOTAL Bs</span>
-          <span style="font-weight: 900; font-family: 'JetBrains Mono', monospace; font-size: 14px;">${fmtBs(factura.totalBs)}</span>
+          <span style="font-weight: 800; font-size: 14px;">TOTAL Bs</span>
+          <span style="font-weight: 900; font-family: 'JetBrains Mono', monospace; font-size: 16px;">${fmtBs(factura.totalBs)}</span>
         </div>
       </div>
       
       <button onclick="reimprimirTicketHistorial(${factura.id})" 
-              style="width: 100%; margin-top: 14px; padding: 12px; background: var(--card); color: var(--text); border: 2px solid var(--border); border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 14px;">
+              style="width: 100%; margin-top: 16px; padding: 14px; background: var(--card); color: var(--text); border: 2px solid var(--border); border-radius: 10px; font-weight: 800; cursor: pointer; font-size: 16px;">
         🖨 Reimprimir Ticket
       </button>
     </div>
