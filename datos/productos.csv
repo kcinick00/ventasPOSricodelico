@@ -1,0 +1,16 @@
+id,nombre,categoria,precio_usd,tiene_iva,imagen,palabras_clave
+1,Guapito,Guapitos/Arepas,1.00,false,imagenes/guapito.jpg,guapito|arepa
+2,Arepa Asada,Guapos/Arepas,1.50,false,imagenes/arepa_asada.jpg,arepa asada
+3,Huevos Rojos,Huevos,2.50,false,imagenes/huevos.jpg,huevos|rojos
+4,Leche Entera,Leche,1.80,false,imagenes/leche.jpg,leche entera
+5,Lomo Artesanal,Lomos/Carnes,6.00,false,imagenes/lomo.jpg,lomo|carne
+6,Mantequilla,Mantequilla/Crema,2.20,false,imagenes/mantequilla.jpg,mantequilla
+7,Pan Canilla,Panes/Tortillas,1.50,false,imagenes/pan.jpg,pan|canilla
+8,Queso Madurado,Quesos Blancos,3.00,false,imagenes/madurado.jpg,madurado|queso
+9,Arroz,Víveres sin IVA,1.00,false,imagenes/arroz.jpg,arroz
+10,Chocolate,Confitería,1.20,true,imagenes/chocolate.jpg,chocolate
+11,Coca-Cola,Refrescos,1.50,true,imagenes/coca.jpg,coca|cola|refresco
+12,Salchichón,Salchichones,4.00,true,imagenes/salchichon.jpg,salchichon
+13,Mayonesa,Salsas,2.00,true,imagenes/mayonesa.jpg,mayonesa
+14,Jamón,Embutidos,5.00,true,imagenes/jamon.jpg,jamon
+15,Jabón,Higiene,2.50,true,imagenes/jabon.jpg,jabon

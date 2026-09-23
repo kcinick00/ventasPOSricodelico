@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>RICODELICO - Caja</title>
+<meta name="theme-color" content="#0F0F0F">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="imagenes/default.png">
+<link rel="apple-touch-icon" href="imagenes/default.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1>RICO<span>DELICO</span></h1>
+    <p>J-50395785-9 · Caja</p>
+  </div>
+  <div style="display: flex; gap: 8px; align-items: center;">
+    <div class="tasa-box">
+      <label for="tasa-bcv">Tasa BCV</label>
+      <input type="number" id="tasa-bcv" placeholder="0.00" step="0.01" min="0">
+      <button onclick="cargarTasa()" title="Actualizar desde API" 
+              style="background:var(--accent);border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-weight:bold;color:#000;">↻</button>
+    </div>
+    <button onclick="abrirAdminCategorias()" title="Administrar categorías"
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:20px;width:44px;height:44px;border-radius:10px;cursor:pointer;">
+      📁
+    </button>
+    <button onclick="abrirAdminProductos()" title="Administrar productos"
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:20px;width:44px;height:44px;border-radius:10px;cursor:pointer;">
+      ⚙️
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <div class="col-categorias">
+    <h2 class="section-title">Categorías</h2>
+    <div id="categorias-grid" class="categorias-grid"></div>
+  </div>
+
+  <div class="col-pedido">
+
+    <div class="dictado-box">
+      <div class="dictado-row">
+        <button id="voice-btn" class="voice-btn" title="Dictar">🎤</button>
+        <input type="text" id="dictado-input" class="dictado-input" 
+               placeholder='Ej: "15 dólares de madurado"'>
+      </div>
+      <p class="dictado-hint">
+        Di <em>"15 dólares de [producto]"</em> o toca una categoría
+      </p>
+    </div>
+
+    <div class="pedido-box">
+      <h2>Pedido actual</h2>
+      <ul id="pedido-lista" class="pedido-lista"></ul>
+    </div>
+
+    <div class="totales-box">
+      <div class="total-row">
+        <span class="label">Total USD</span>
+        <span class="value-usd" id="total-usd">$0.00</span>
+      </div>
+      <div class="total-row total-final">
+        <span class="label">Total Bs</span>
+        <span class="value-bs" id="total-bs">0,00 Bs</span>
+      </div>
+    </div>
+
+    <div class="botones-box">
+      <button class="btn btn-primary" onclick="imprimirTicket()">🖨 Imprimir</button>
+      <button class="btn btn-secondary" onclick="limpiarPedido()">🗑 Limpiar</button>
+      <button class="btn btn-secondary" onclick="abrirHistorial()">📋 Historial</button>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- MODAL SUBPRODUCTOS -->
+<div id="modal-subproductos" class="modal-overlay">
+  <div class="modal-content" style="max-width: 600px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-header">
+      <h2 id="modal-categoria-nombre">Categoría</h2>
+      <button class="modal-close" onclick="cerrarModalSubproductos()">✕</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 12px;">
+      <div style="margin-bottom: 12px; flex-shrink: 0;">
+        <input type="text" id="buscador-subproductos" class="dictado-input" 
+               placeholder="🔍 Buscar producto..." autocomplete="off" style="width: 100%;">
+      </div>
+      <div id="subproductos-lista" class="subproductos-lista" 
+           style="overflow-y: auto; flex: 1; padding-right: 4px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MONTO -->
+<div id="modal-monto" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Monto en dólares</h2>
+      <button class="modal-close" onclick="cerrarModalMonto()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="monto-box">
+        <div class="monto-producto" id="monto-producto">Producto</div>
+        <div class="monto-display" id="monto-display">0.00</div>
+        <div class="monto-bs-preview">
+          Total en Bs: <strong id="monto-bs-preview">0,00 Bs</strong>
+        </div>
+        <div class="teclado-numerico">
+          <button onclick="presionarTecla('1')">1</button>
+          <button onclick="presionarTecla('2')">2</button>
+          <button onclick="presionarTecla('3')">3</button>
+          <button onclick="presionarTecla('4')">4</button>
+          <button onclick="presionarTecla('5')">5</button>
+          <button onclick="presionarTecla('6')">6</button>
+          <button onclick="presionarTecla('7')">7</button>
+          <button onclick="presionarTecla('8')">8</button>
+          <button onclick="presionarTecla('9')">9</button>
+          <button onclick="presionarTecla('.')">.</button>
+          <button onclick="presionarTecla('0')">0</button>
+          <button onclick="presionarTecla('C')" class="btn-clear">C</button>
+        </div>
+        <div class="monto-botones">
+          <button class="btn-cancelar" onclick="cerrarModalMonto()">Cancelar</button>
+          <button class="btn-agregar" onclick="confirmarMonto()">Agregar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL HISTÓRICO DE FACTURAS -->
+<div id="modal-historial" class="modal-overlay">
+  <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+    <div class="modal-header">
+      <h2>📋 Histórico de Facturas</h2>
+      <button class="modal-close" onclick="cerrarHistorial()">✕</button>
+    </div>
+    <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 12px;">
+      
+      <div id="resumen-dia" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
+        <div style="background: linear-gradient(135deg, #10B981 0%, #00A86B 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Facturas Hoy</div>
+          <div id="resumen-count" style="font-size: 22px; font-weight: 900; margin-top: 4px;">0</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #2196F3 0%, #0070BA 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total USD Hoy</div>
+          <div id="resumen-usd" style="font-size: 22px; font-weight: 900; margin-top: 4px;">$0.00</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #FFA000 0%, #FF6B00 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total Bs Hoy</div>
+          <div id="resumen-bs" style="font-size: 16px; font-weight: 900; margin-top: 4px;">0,00 Bs</div>
+        </div>
+      </div>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
+        <input type="date" id="filtro-fecha-historial" 
+               onchange="cargarHistorialPorFecha(this.value)"
+               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+        <button onclick="cargarHistorialPorFecha('')" 
+                style="padding: 10px 16px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          Ver Hoy
+        </button>
+      </div>
+      
+      <div id="historial-lista" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;"></div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN PRODUCTOS -->
+<div id="modalAdminProductos" class="modal-overlay">
+  <div class="modal-content" style="max-width: 900px; max-height: 95vh;">
+    <div class="modal-header">
+      <h2>⚙️ Administrar Productos</h2>
+      <button class="modal-close" onclick="cerrarAdminProductos()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="adminBuscar" placeholder="🔍 Buscar producto..." 
+               oninput="buscarEnAdmin(this.value)"
+               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+        <button onclick="nuevoProducto()" 
+                style="background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          ➕ Nuevo
+        </button>
+      </div>
+      
+      <div id="adminListaProductos" class="admin-lista"></div>
+      
+      <div id="adminFormProducto" class="hidden" 
+           style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 20px;">
+        <h3 id="adminTituloForm" style="margin-bottom: 15px; color: var(--accent);">➕ Nuevo Producto</h3>
+        
+        <input type="hidden" id="adminProductoId">
+        
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Nombre del producto *</label>
+        <input type="text" id="adminProductoNombre" required 
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+        
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Categoría *</label>
+        <select id="adminProductoCategoria" required 
+                style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);"></select>
+        
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Precio (USD) *</label>
+        <input type="number" id="adminProductoPrecio" step="0.01" min="0" required 
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+        
+        <label style="display:flex; align-items:center; gap:10px; margin-top:16px; font-weight:700; font-size:13px; color:var(--text);">
+          <input type="checkbox" id="adminProductoIVA" checked style="width:20px; height:20px;">
+          ¿Tiene IVA (16%)?
+        </label>
+        
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Palabras clave (separadas por coma)</label>
+        <input type="text" id="adminProductoPalabras" placeholder="Ej: madurado, queso, curado"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+        
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Imagen</label>
+        <input type="file" id="adminProductoImagen" accept="image/*" onchange="subirImagenProducto(event)"
+               style="width:100%; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+        <img id="adminProductoImagenPreview" src="imagenes/default.png" 
+             style="max-width:150px; max-height:150px; margin-top:10px; border-radius:8px; border:2px solid var(--border);">
+        
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button onclick="guardarProducto()" 
+                  style="flex:1; background:var(--accent); color:#000; border:none; padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+            💾 Guardar
+          </button>
+          <button onclick="document.getElementById('adminFormProducto').classList.add('hidden')" 
+                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+            Cancelar
+          </button>
+          <button id="btnEliminarProducto" 
+                  onclick="eliminarProducto(parseInt(document.getElementById('adminProductoId').value))" 
+                  style="background:var(--red); color:white; border:none; padding:14px 20px; border-radius:8px; font-weight:800; cursor:pointer;"
+                  class="hidden">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADMIN CATEGORÍAS -->
+<div id="modalAdminCategorias" class="modal-overlay">
+  <div class="modal-content" style="max-width: 900px; max-height: 95vh;">
+    <div class="modal-header">
+      <h2>📁 Administrar Categorías</h2>
+      <button class="modal-close" onclick="cerrarAdminCategorias()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="adminCatBuscar" placeholder="🔍 Buscar categoría..."
+               oninput="filtrarCategoriasAdmin(this.value)"
+               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+        <button onclick="nuevaCategoria()"
+                style="background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer;">
+          ➕ Nueva
+        </button>
+      </div>
+
+      <div id="adminListaCategorias" class="admin-lista"></div>
+
+      <div id="adminFormCategoria" class="hidden"
+           style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 20px;">
+        <h3 id="adminCatTituloForm" style="margin-bottom: 15px; color: var(--accent);">➕ Nueva Categoría</h3>
+
+        <input type="hidden" id="adminCatId">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Nombre *</label>
+        <input type="text" id="adminCatNombre" required
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Emoji (ej: 🥚 🥛 🍞)</label>
+        <input type="text" id="adminCatEmoji" placeholder="📦" maxlength="4"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:24px; text-align:center;">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Orden (menor = primero)</label>
+        <input type="number" id="adminCatOrden" value="0"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Foto de la categoría</label>
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          <div style="flex:1;">
+            <input type="file" id="adminCatImagen" accept="image/*" onchange="subirImagenCategoria(event)"
+                   style="width:100%; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+              💡 Sube una foto (máx 2MB)
+            </div>
+          </div>
+          <img id="adminCatImagenPreview" src="imagenes/default.png"
+               style="width:80px; height:80px; object-fit:cover; border-radius:10px; border:2px solid var(--border);">
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button onclick="guardarCategoria()"
+                  style="flex:1; background:var(--accent); color:#000; border:none; padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+            💾 Guardar
+          </button>
+          <button onclick="document.getElementById('adminFormCategoria').classList.add('hidden')"
+                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+            Cancelar
+          </button>
+          <button id="btnEliminarCategoria"
+                  onclick="eliminarCategoria(parseInt(document.getElementById('adminCatId').value))"
+                  style="background:var(--red); color:white; border:none; padding:14px 20px; border-radius:8px; font-weight:800; cursor:pointer;"
+                  class="hidden">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+<script src="productos.js"></script>
+<script src="admin-productos.js"></script>
+<script src="admin-categorias.js"></script>
+<script src="voice.js"></script>
+<script src="app.js"></script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('✅ SW registrado'))
+      .catch(err => console.error('❌ SW error:', err));
+  });
+}
+</script>
+
+</body>
+</html>
