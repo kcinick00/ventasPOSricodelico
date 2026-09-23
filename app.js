@@ -1,6 +1,6 @@
 // =========================================================
-// app.js - RICODELICO CAJA v5.0
-// Historial completo + Totales diarios
+// app.js - RICODELICO CAJA v6.0
+// Layout 65/35 + Formato centavos + Buscador solo en Inventario
 // =========================================================
 
 // =========================================================
@@ -175,7 +175,7 @@ function guardarTasa(valor) {
 }
 
 // =========================================================
-// SELECCIONAR CATEGORÍA
+// SELECCIONAR CATEGORÍA (buscador solo en Inventario)
 // =========================================================
 async function seleccionarCategoria(cat) {
   esCategoriaInventario = cat.nombre.toLowerCase().includes('inventario');
@@ -195,24 +195,36 @@ async function seleccionarCategoria(cat) {
     `${cat.emoji || '📦'} ${cat.nombre}`;
 
   const buscador = document.getElementById("buscador-subproductos");
-  buscador.value = "";
+  const buscadorContainer = buscador.parentElement;
+
+  if (esCategoriaInventario) {
+    buscadorContainer.style.display = "block";
+    buscador.value = "";
+    
+    buscador.oninput = (e) => {
+      const filtro = normalizarNombre(e.target.value);
+      if (!filtro) {
+        renderSubproductos(productosCategoriaActual);
+        return;
+      }
+      const filtrados = productosCategoriaActual.filter(p =>
+        p.nombreNormalizado.includes(filtro)
+      );
+      renderSubproductos(filtrados);
+    };
+  } else {
+    buscadorContainer.style.display = "none";
+    buscador.value = "";
+    buscador.oninput = null;
+  }
 
   renderSubproductos(productosCategoriaActual);
 
-  buscador.oninput = (e) => {
-    const filtro = normalizarNombre(e.target.value);
-    if (!filtro) {
-      renderSubproductos(productosCategoriaActual);
-      return;
-    }
-    const filtrados = productosCategoriaActual.filter(p =>
-      p.nombreNormalizado.includes(filtro)
-    );
-    renderSubproductos(filtrados);
-  };
-
   document.getElementById("modal-subproductos").classList.add("active");
-  setTimeout(() => buscador.focus(), 200);
+
+  if (esCategoriaInventario) {
+    setTimeout(() => buscador.focus(), 200);
+  }
 }
 
 // =========================================================
@@ -322,12 +334,13 @@ function abrirModalMontoConPrecio(productoId, esInventario = false) {
   document.getElementById("monto-producto").textContent = producto.nombre;
 
   if (producto.precioUSD > 0) {
-    montoActualTexto = producto.precioUSD.toFixed(2);
+    const centavos = Math.round(producto.precioUSD * 100);
+    montoActualTexto = centavos.toString();
   } else {
     montoActualTexto = "";
   }
 
-  document.getElementById("monto-display").textContent = montoActualTexto || "0.00";
+  document.getElementById("monto-display").textContent = formatearMontoDisplay(montoActualTexto);
   actualizarPreviewMonto();
   document.getElementById("modal-monto").classList.add("active");
 }
@@ -338,36 +351,53 @@ function cerrarModalMonto() {
   montoActualTexto = "";
 }
 
+// =========================================================
+// TECLADO NUMÉRICO (formato centavos automático)
+// =========================================================
 function presionarTecla(tecla) {
   if (tecla === 'C') {
     montoActualTexto = "";
   } else if (tecla === '.') {
-    if (montoActualTexto.includes('.')) return;
-    if (montoActualTexto === "") montoActualTexto = "0";
-    montoActualTexto += '.';
+    return;
   } else {
-    if (montoActualTexto.includes('.')) {
-      const partes = montoActualTexto.split('.');
-      if (partes[1] && partes[1].length >= 2) return;
-    }
-    if (montoActualTexto === "0" && tecla !== '.') {
+    if (!/^\d$/.test(tecla)) return;
+    if (montoActualTexto.length >= 8) return;
+    
+    if (montoActualTexto === "0") {
       montoActualTexto = tecla;
     } else {
       montoActualTexto += tecla;
     }
   }
-  document.getElementById("monto-display").textContent = montoActualTexto || "0.00";
+
+  document.getElementById("monto-display").textContent = formatearMontoDisplay(montoActualTexto);
   actualizarPreviewMonto();
 }
 
+function formatearMontoDisplay(texto) {
+  if (!texto || texto === "") return "0.00";
+  
+  const num = parseInt(texto, 10) || 0;
+  const dolares = Math.floor(num / 100);
+  const centavos = num % 100;
+  
+  return `${dolares}.${centavos.toString().padStart(2, '0')}`;
+}
+
+function obtenerMontoNumerico() {
+  if (!montoActualTexto || montoActualTexto === "") return 0;
+  const num = parseInt(montoActualTexto, 10) || 0;
+  return num / 100;
+}
+
 function actualizarPreviewMonto() {
-  const monto = parseFloat(montoActualTexto) || 0;
+  const monto = obtenerMontoNumerico();
   const preview = document.getElementById("monto-bs-preview");
   if (preview) preview.textContent = fmtBs(monto * tasaBCV);
 }
 
 function confirmarMonto() {
-  const monto = parseFloat(montoActualTexto);
+  const monto = obtenerMontoNumerico();
 
   if (!monto || monto <= 0) {
     showToast("Ingresa un monto válido", "remove");
@@ -532,7 +562,7 @@ async function imprimirTicket() {
 }
 
 // =========================================================
-// HISTORIAL DE FACTURAS (Supabase)
+// HISTORIAL DE FACTURAS
 // =========================================================
 async function guardarEnHistorial(factura) {
   historial.push(factura);
@@ -763,7 +793,6 @@ document.addEventListener("keydown", (e) => {
 
   if (tecla === '.' || tecla === ',') {
     e.preventDefault();
-    presionarTecla('.');
     return;
   }
 
@@ -771,7 +800,7 @@ document.addEventListener("keydown", (e) => {
     e.preventDefault();
     if (montoActualTexto.length > 0) {
       montoActualTexto = montoActualTexto.slice(0, -1);
-      document.getElementById("monto-display").textContent = montoActualTexto || "0.00";
+      document.getElementById("monto-display").textContent = formatearMontoDisplay(montoActualTexto);
       actualizarPreviewMonto();
     }
     return;
@@ -791,7 +820,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // =========================================================
-// CÓDIGO DE BARRAS (opcional)
+// CÓDIGO DE BARRAS
 // =========================================================
 let bufferCodigoBarras = "";
 let ultimoTiempoTecla = 0;
