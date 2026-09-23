@@ -1,6 +1,6 @@
 // =========================================================
-// app.js - RICODELICO CAJA v7.0
-// Impresión optimizada para tablet + todos los cambios
+// app.js - RICODELICO CAJA v8.0
+// Bloqueo zoom + Botón ⌫ + Limpieza automática al cerrar ticket
 // =========================================================
 
 // =========================================================
@@ -195,7 +195,7 @@ async function seleccionarCategoria(cat) {
     `${cat.emoji || '📦'} ${cat.nombre}`;
 
   const buscador = document.getElementById("buscador-subproductos");
-  const buscadorContainer = buscador.parentElement;
+  const buscadorContainer = document.getElementById("subproductos-buscador-container");
 
   if (esCategoriaInventario) {
     buscadorContainer.style.display = "block";
@@ -308,6 +308,11 @@ function renderSubproductos(lista) {
         : ''}
     </div>
   `).join("");
+
+  // Re-aplicar tamaños de letra guardados
+  if (typeof cargarTamanosGuardados === 'function') {
+    setTimeout(() => cargarTamanosGuardados(), 50);
+  }
 }
 
 function cerrarModalSubproductos() {
@@ -351,11 +356,17 @@ function cerrarModalMonto() {
 }
 
 // =========================================================
-// TECLADO NUMÉRICO (formato centavos automático)
+// TECLADO NUMÉRICO (formato centavos + backspace)
 // =========================================================
 function presionarTecla(tecla) {
   if (tecla === 'C') {
+    // Limpiar todo
     montoActualTexto = "";
+  } else if (tecla === '⌫') {
+    // Borrar solo el último dígito
+    if (montoActualTexto.length > 0) {
+      montoActualTexto = montoActualTexto.slice(0, -1);
+    }
   } else if (tecla === '.') {
     return;
   } else {
@@ -445,6 +456,11 @@ function renderPedido() {
     `;
     lista.appendChild(li);
   });
+
+  // Re-aplicar tamaños de letra guardados
+  if (typeof cargarTamanosGuardados === 'function') {
+    setTimeout(() => cargarTamanosGuardados(), 50);
+  }
 }
 
 function eliminarItem(idx) {
@@ -473,7 +489,7 @@ function limpiarPedido() {
 }
 
 // =========================================================
-// IMPRIMIR TICKET (compatible con Android/Tablet)
+// IMPRIMIR TICKET (con limpieza automática al cerrar)
 // =========================================================
 async function imprimirTicket() {
   if (pedido.length === 0) {
@@ -647,12 +663,23 @@ async function imprimirTicket() {
   printWindow.document.close();
 
   await guardarEnHistorial({ numero, fecha, hora, items: [...pedido], totalUSD, totalBs, tasaBCV });
-  // ✅ Limpiar el pedido automáticamente después de imprimir
-  pedido = [];
-  renderPedido();
-  actualizarTotales();
   
-  showToast("✅ Ticket generado. Pedido listo para el siguiente cliente.", "success");}
+  // ✅ Limpiar el pedido automáticamente después de cerrar la ventana
+  const checkClosed = setInterval(() => {
+    if (printWindow.closed) {
+      clearInterval(checkClosed);
+      
+      // Limpiar pedido
+      pedido = [];
+      renderPedido();
+      actualizarTotales();
+      
+      showToast("✅ Pedido listo para el siguiente cliente", "success");
+    }
+  }, 500);
+  
+  showToast("Ticket listo. Toca IMPRIMIR en la nueva ventana.", "success");
+}
 
 // =========================================================
 // HISTORIAL DE FACTURAS
@@ -891,11 +918,7 @@ document.addEventListener("keydown", (e) => {
 
   if (tecla === 'Backspace') {
     e.preventDefault();
-    if (montoActualTexto.length > 0) {
-      montoActualTexto = montoActualTexto.slice(0, -1);
-      document.getElementById("monto-display").textContent = formatearMontoDisplay(montoActualTexto);
-      actualizarPreviewMonto();
-    }
+    presionarTecla('⌫');
     return;
   }
 
