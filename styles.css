@@ -1,6 +1,6 @@
 /* =========================================================
-   RICODELICO - Estilos v6.0
-   Layout 65/35 + Categorías más grandes
+   RICODELICO - Estilos v7.0
+   Layout 65/35 + Subproductos más grandes y legibles
    ========================================================= */
 
 :root {
@@ -134,7 +134,7 @@ header::before {
   min-height: 0;
 }
 
-/* ===== CATEGORÍAS MÁS GRANDES ===== */
+/* ===== CATEGORÍAS ===== */
 .col-categorias {
   overflow-y: auto;
   padding-right: 8px;
@@ -286,12 +286,12 @@ header::before {
 
 .dictado-input {
   flex: 1;
-  padding: 11px 14px;
+  padding: 13px 16px;
   background: var(--bg);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: 10px;
   color: var(--text);
-  font-size: 14px;
+  font-size: 16px;
   font-family: inherit;
   font-weight: 600;
 }
@@ -537,7 +537,7 @@ header::before {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px 22px;
+  padding: 20px 24px;
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
@@ -548,61 +548,74 @@ header::before {
 .modal-header h2 {
   margin: 0;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 400;
   color: var(--text);
-  letter-spacing: 2px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
 }
 
 .modal-close {
   background: transparent;
   border: 1px solid var(--border);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   color: var(--text-muted);
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.2s;
 }
 
-.modal-body { padding: 20px 22px; }
+.modal-close:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
 
-/* ===== SUBPRODUCTOS ===== */
+.modal-body { padding: 20px 24px; }
+
+/* ===== SUBPRODUCTOS (MÁS GRANDES Y LEGIBLES) ===== */
 .subproductos-lista {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
 }
 
 .subproducto {
-  padding: 14px 12px;
+  padding: 22px 16px;
   background: var(--bg);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
   cursor: pointer;
   text-align: center;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  letter-spacing: 0.3px;
   color: var(--text);
   transition: all 0.2s;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .subproducto:hover, .subproducto:active {
   border-color: var(--accent);
   background: rgba(180, 255, 57, 0.08);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 /* ===== MODAL MONTO ===== */
 .monto-box { text-align: center; padding: 10px 0; }
 
 .monto-producto {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   color: var(--accent);
   margin-bottom: 16px;
   text-transform: uppercase;
@@ -615,16 +628,16 @@ header::before {
   border-radius: 12px;
   padding: 15px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 36px;
+  font-size: 42px;
   font-weight: 900;
   color: var(--accent);
   text-align: right;
   margin-bottom: 10px;
-  min-height: 70px;
+  min-height: 80px;
 }
 
 .monto-bs-preview {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-muted);
   margin-bottom: 18px;
 }
@@ -632,22 +645,22 @@ header::before {
 .monto-bs-preview strong {
   color: var(--accent);
   font-family: 'JetBrains Mono', monospace;
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .teclado-numerico {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 16px;
 }
 
 .teclado-numerico button {
   background: var(--bg-soft);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 15px 0;
-  font-size: 22px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 18px 0;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text);
   cursor: pointer;
@@ -679,10 +692,10 @@ header::before {
 }
 
 .monto-botones button {
-  padding: 14px;
-  border-radius: 10px;
+  padding: 16px;
+  border-radius: 12px;
   border: none;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 900;
   cursor: pointer;
   font-family: 'Bebas Neue', sans-serif;
@@ -717,10 +730,10 @@ header::before {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 18px;
+  padding: 14px 20px;
   background: rgba(26, 26, 26, 0.98);
   border-radius: 12px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text);
   border-left: 4px solid var(--accent);
@@ -728,7 +741,7 @@ header::before {
   opacity: 0;
   transition: transform 0.3s, opacity 0.3s;
   pointer-events: auto;
-  max-width: 320px;
+  max-width: 340px;
 }
 
 .toast.toast-visible {
@@ -746,13 +759,13 @@ header::before {
 .toast.toast-info { border-left-color: #60A5FA; }
 
 .toast-icon {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 900;
   color: #0F0F0F;
   flex-shrink: 0;
@@ -863,7 +876,7 @@ header::before {
   background: var(--bg);
   border: 1.5px solid var(--border);
   border-radius: 12px;
-  padding: 12px;
+  padding: 14px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -882,13 +895,13 @@ header::before {
 
 .factura-numero {
   font-weight: 900;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--accent);
   font-family: 'JetBrains Mono', monospace;
 }
 
 .factura-hora {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
   font-weight: 600;
 }
@@ -904,21 +917,21 @@ header::before {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 800;
   color: var(--accent);
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .factura-total-bs {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   color: var(--text);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .factura-items {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-muted);
-  margin-top: 6px;
-  padding-top: 6px;
+  margin-top: 8px;
+  padding-top: 8px;
   border-top: 1px dashed var(--border);
 }
 
@@ -981,8 +994,11 @@ header::before {
   .tasa-box { padding: 4px 8px; }
   .tasa-box label { font-size: 9px; }
   .tasa-box input { width: 80px; font-size: 12px; }
-  .monto-display { font-size: 28px; }
-  .teclado-numerico button { padding: 12px 0; font-size: 18px; }
+  .monto-display { font-size: 32px; }
+  .teclado-numerico button { padding: 15px 0; font-size: 20px; }
+  .subproductos-lista {
+    grid-template-columns: 1fr;
+  }
   .admin-lista {
     grid-template-columns: 1fr;
   }
