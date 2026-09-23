@@ -1144,3 +1144,39 @@ input[type="range"]::-moz-range-thumb {
   border: none;
   box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
 }
+
+/* ===== EVITAR ZOOM CON DOBLE TAP (parte CSS) ===== */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+button, .categoria, .subproducto, .btn, input, a {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===== BOTÓN DE BORRAR UN DÍGITO (⌫) ===== */
+.teclado-numerico .btn-borrar {
+  background: rgba(255, 160, 0, 0.15);
+  color: var(--orange);
+  border-color: rgba(255, 160, 0, 0.3);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.teclado-numerico .btn-borrar:active {
+  background: var(--orange);
+  color: white;
+  transform: scale(0.95);
+}
