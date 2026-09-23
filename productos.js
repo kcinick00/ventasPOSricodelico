@@ -7,9 +7,6 @@ let CATEGORIAS = [];
 let PRODUCTOS = [];
 let PRODUCTOS_POR_CATEGORIA = {};
 
-// =========================================================
-// CARGAR TODO
-// =========================================================
 async function cargarProductos() {
   console.log("📥 Cargando productos...");
 
@@ -25,14 +22,10 @@ async function cargarProductos() {
   console.log(`✅ ${PRODUCTOS.length} productos cargados`);
 }
 
-// =========================================================
-// CARGAR DESDE SUPABASE
-// =========================================================
 async function cargarDesdeSupabase() {
   if (!supabaseClient) return false;
 
   try {
-    // 1. Categorías (con imagen)
     const { data: cats, error: errCats } = await supabaseClient
       .from('categorias_pos')
       .select('*')
@@ -48,7 +41,6 @@ async function cargarDesdeSupabase() {
       orden: c.orden || 0
     }));
 
-    // 2. Productos (de la tabla 'productos')
     const { data: prods, error: errProds } = await supabaseClient
       .from('productos')
       .select('*')
@@ -78,9 +70,6 @@ async function cargarDesdeSupabase() {
   }
 }
 
-// =========================================================
-// CARGAR DESDE CSV LOCAL (respaldo)
-// =========================================================
 async function cargarDesdeCSV() {
   try {
     const resp = await fetch('datos/productos.csv');
@@ -132,9 +121,6 @@ async function cargarDesdeCSV() {
   }
 }
 
-// =========================================================
-// AGRUPAR POR CATEGORÍA
-// =========================================================
 function agruparPorCategoria() {
   PRODUCTOS_POR_CATEGORIA = {};
   CATEGORIAS.forEach(cat => {
@@ -142,9 +128,6 @@ function agruparPorCategoria() {
   });
 }
 
-// =========================================================
-// BUSCAR PRODUCTO
-// =========================================================
 function buscarProducto(texto) {
   if (!texto) return null;
   const t = normalizarNombre(texto);
@@ -168,9 +151,6 @@ function buscarProducto(texto) {
   return null;
 }
 
-// =========================================================
-// RENDER CATEGORÍAS (con imágenes GRANDES)
-// =========================================================
 function renderCategorias() {
   const grid = document.getElementById("categorias-grid");
   if (!grid) return;
@@ -182,10 +162,8 @@ function renderCategorias() {
     div.className = "categoria";
     div.onclick = () => seleccionarCategoria(cat);
 
-    // Contenido del cuadro de imagen
     let imagenHTML;
     if (cat.imagen && cat.imagen.trim() !== '' && !cat.imagen.includes('default.png')) {
-      // Foto real
       imagenHTML = `
         <div class="categoria-imagen">
           <img src="${cat.imagen}" alt="${cat.nombre}"
@@ -193,7 +171,6 @@ function renderCategorias() {
         </div>
       `;
     } else {
-      // Solo emoji (grande, centrado)
       imagenHTML = `
         <div class="categoria-imagen">
           <span class="categoria-emoji">${cat.emoji || '📦'}</span>
@@ -208,4 +185,9 @@ function renderCategorias() {
     `;
     grid.appendChild(div);
   });
+
+  // Re-aplicar tamaños de letra guardados
+  if (typeof cargarTamanosGuardados === 'function') {
+    setTimeout(() => cargarTamanosGuardados(), 100);
+  }
 }
