@@ -1,6 +1,6 @@
 /* =========================================================
-   RICODELICO - Estilos v9.0
-   Layout 65/35 + Imágenes de categoría GRANDES
+   RICODELICO - Estilos v10.0
+   Layout responsive (PC/Tablet 65-35, Celular 1 columna)
    ========================================================= */
 
 :root {
@@ -22,12 +22,23 @@
 
 * { box-sizing: border-box; }
 
+/* ===== TOQUES Y ZOOM ===== */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
 html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+  overscroll-behavior: none;
 }
 
 body {
@@ -38,6 +49,15 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 16px;
+}
+
+button, .categoria, .subproducto, .btn, input, a, [onclick] {
+  touch-action: manipulation;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ===== HEADER ===== */
@@ -206,7 +226,6 @@ header::before {
   transform: translateY(-3px);
 }
 
-/* Contenedor de la imagen/emoji - ocupa casi todo */
 .categoria-imagen {
   width: 100%;
   height: 130px;
@@ -230,7 +249,6 @@ header::before {
   line-height: 1;
 }
 
-/* Nombre abajo, sobre fondo del card */
 .categoria-nombre {
   width: 100%;
   padding: 10px 8px;
@@ -715,6 +733,20 @@ header::before {
   color: white;
 }
 
+.teclado-numerico .btn-borrar {
+  background: rgba(255, 160, 0, 0.15);
+  color: var(--orange);
+  border-color: rgba(255, 160, 0, 0.3);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.teclado-numerico .btn-borrar:active {
+  background: var(--orange);
+  color: white;
+  transform: scale(0.95);
+}
+
 .monto-botones {
   display: grid;
   grid-template-columns: 1fr 2fr;
@@ -987,127 +1019,6 @@ header::before {
   background: var(--text-muted);
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 900px) {
-  html, body {
-    overflow: auto;
-    height: auto;
-    min-height: 100dvh;
-  }
-  body {
-    min-height: 100dvh;
-    display: block;
-  }
-  .layout {
-    display: block;
-    padding: 12px;
-  }
-  .categorias-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 12px;
-  }
-  .categoria {
-    min-height: 160px;
-  }
-  .categoria-imagen {
-    height: 110px;
-  }
-  .categoria-imagen .categoria-emoji {
-    font-size: 52px;
-  }
-  .categoria-nombre {
-    font-size: 14px;
-    padding: 8px 6px;
-  }
-}
-
-@media (max-width: 600px) {
-  .brand h1 { font-size: 24px; }
-  .brand p { font-size: 11px; }
-  .tasa-box { padding: 6px 10px; }
-  .tasa-box label { font-size: 11px; }
-  .tasa-box input { width: 90px; font-size: 14px; }
-  .monto-display { font-size: 38px; }
-  .teclado-numerico button { padding: 18px 0; font-size: 24px; }
-  .subproductos-lista {
-    grid-template-columns: 1fr;
-  }
-  .admin-lista {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ===== CONFIGURADOR DE LETRAS ===== */
-input[type="range"] {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 8px;
-  background: var(--border);
-  border-radius: 4px;
-  outline: none;
-  margin-bottom: 8px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 28px;
-  height: 28px;
-  background: var(--accent);
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
-  transition: all 0.2s;
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.15);
-}
-
-input[type="range"]::-moz-range-thumb {
-  width: 28px;
-  height: 28px;
-  background: var(--accent);
-  border-radius: 50%;
-  cursor: pointer;
-  border: none;
-  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
-}
-/* ===== EVITAR ZOOM CON DOBLE TAP ===== */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
-
-html, body {
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  touch-action: manipulation;
-  overscroll-behavior: none;
-}
-
-button, .categoria, .subproducto, .btn, input {
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
-}
-
-/* ===== BOTÓN DE BORRAR UN DÍGITO (⌫) ===== */
-.teclado-numerico .btn-borrar {
-  background: rgba(255, 160, 0, 0.15);
-  color: var(--orange);
-  border-color: rgba(255, 160, 0, 0.3);
-  font-size: 30px;
-  font-weight: 900;
-}
-
-.teclado-numerico .btn-borrar:active {
-  background: var(--orange);
-  color: white;
-  transform: scale(0.95);
-}
-
 /* ===== CONFIGURADOR DE LETRAS (sliders) ===== */
 input[type="range"] {
   -webkit-appearance: none;
@@ -1145,38 +1056,178 @@ input[type="range"]::-moz-range-thumb {
   box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
 }
 
-/* ===== EVITAR ZOOM CON DOBLE TAP (parte CSS) ===== */
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* ===== TABLET Y CELULAR (ancho < 900px) ===== */
+@media (max-width: 900px) {
+  html, body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100dvh;
+  }
+  
+  body {
+    display: block;
+    min-height: 100dvh;
+  }
+  
+  .layout {
+    display: block;
+    padding: 12px;
+    max-width: 100%;
+  }
+  
+  .col-categorias {
+    height: auto;
+    overflow-y: visible;
+    padding-right: 0;
+    margin-bottom: 20px;
+  }
+  
+  .col-pedido {
+    height: auto;
+    min-height: auto;
+  }
+  
+  .pedido-box {
+    min-height: 200px;
+    max-height: 400px;
+  }
+  
+  .categorias-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  
+  .categoria {
+    min-height: 140px;
+    padding: 14px 8px;
+  }
+  
+  .categoria-imagen {
+    height: 90px;
+  }
+  
+  .categoria-imagen .categoria-emoji {
+    font-size: 44px;
+  }
+  
+  .categoria-nombre {
+    font-size: 13px;
+    padding: 6px 4px;
+  }
+  
+  .categoria-count {
+    font-size: 12px;
+    padding: 3px 7px;
+  }
 }
 
-html, body {
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  touch-action: manipulation;
-  overscroll-behavior: none;
-}
-
-button, .categoria, .subproducto, .btn, input, a {
-  touch-action: manipulation;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* ===== BOTÓN DE BORRAR UN DÍGITO (⌫) ===== */
-.teclado-numerico .btn-borrar {
-  background: rgba(255, 160, 0, 0.15);
-  color: var(--orange);
-  border-color: rgba(255, 160, 0, 0.3);
-  font-size: 30px;
-  font-weight: 900;
-}
-
-.teclado-numerico .btn-borrar:active {
-  background: var(--orange);
-  color: white;
-  transform: scale(0.95);
+/* ===== CELULAR (ancho < 600px) ===== */
+@media (max-width: 600px) {
+  header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+  
+  .brand h1 {
+    font-size: 22px;
+  }
+  
+  .brand p {
+    font-size: 9px;
+  }
+  
+  .tasa-box {
+    padding: 5px 8px;
+    gap: 6px;
+  }
+  
+  .tasa-box label {
+    font-size: 10px;
+  }
+  
+  .tasa-box input {
+    width: 80px;
+    font-size: 13px;
+    padding: 6px 8px;
+  }
+  
+  /* Botones de admin más chicos */
+  header > div:last-child {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  
+  header > div:last-child > button {
+    width: 42px !important;
+    height: 42px !important;
+    font-size: 18px !important;
+  }
+  
+  /* Modal en celular más compacto */
+  .modal-content {
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+  
+  .modal-header {
+    padding: 16px 18px;
+  }
+  
+  .modal-header h2 {
+    font-size: 22px;
+    letter-spacing: 1.5px;
+  }
+  
+  .modal-body {
+    padding: 16px 18px;
+  }
+  
+  /* Subproductos en celular: 2 columnas */
+  .subproductos-lista {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .subproducto {
+    padding: 16px 10px;
+    min-height: 90px;
+    font-size: 16px;
+  }
+  
+  /* Teclado numérico: botones más chicos */
+  .monto-display {
+    font-size: 38px;
+    padding: 14px;
+    min-height: 70px;
+  }
+  
+  .teclado-numerico button {
+    padding: 16px 0;
+    font-size: 22px;
+  }
+  
+  /* Grid de categorías: 2 columnas en celular */
+  .categorias-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Botones de abajo */
+  .btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+  
+  .btn-primary {
+    grid-column: span 2;
+  }
+  
+  /* Config letras sliders más chicos */
+  input[type="range"]::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
 }
