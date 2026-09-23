@@ -20,7 +20,7 @@
     <h1>RICO<span>DELICO</span></h1>
     <p>J-50395785-9 · Caja</p>
   </div>
-  <div style="display: flex; gap: 8px; align-items: center;">
+  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
     <div class="tasa-box">
       <label for="tasa-bcv">Tasa BCV</label>
       <input type="number" id="tasa-bcv" placeholder="0.00" step="0.01" min="0">
@@ -31,9 +31,17 @@
             style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
       📁
     </button>
-    <button onclick="abrirAdminProductos()" title="Administrar productos"
+    <button onclick="abrirAdminSubproductosGlobal()" title="Administrar subproductos"
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
+      📦
+    </button>
+    <button onclick="abrirAdminProductos()" title="Administrar productos (inventario)"
             style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
       ⚙️
+    </button>
+    <button onclick="abrirConfiguracionLetras()" title="Configurar tamaños de letra"
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
+      🔤
     </button>
   </div>
 </header>
@@ -92,7 +100,7 @@
       <button class="modal-close" onclick="cerrarModalSubproductos()">✕</button>
     </div>
     <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 12px;">
-      <div style="margin-bottom: 12px; flex-shrink: 0;">
+      <div id="subproductos-buscador-container" style="margin-bottom: 12px; flex-shrink: 0;">
         <input type="text" id="buscador-subproductos" class="dictado-input" 
                placeholder="🔍 Buscar producto..." autocomplete="off" style="width: 100%;">
       </div>
@@ -179,11 +187,11 @@
   </div>
 </div>
 
-<!-- MODAL ADMIN PRODUCTOS -->
+<!-- MODAL ADMIN PRODUCTOS (Inventario) -->
 <div id="modalAdminProductos" class="modal-overlay">
   <div class="modal-content" style="max-width: 900px; max-height: 95vh;">
     <div class="modal-header">
-      <h2>⚙️ Administrar Productos</h2>
+      <h2>⚙️ Administrar Productos (Inventario)</h2>
       <button class="modal-close" onclick="cerrarAdminProductos()">✕</button>
     </div>
     <div class="modal-body">
@@ -327,6 +335,151 @@
   </div>
 </div>
 
+<!-- MODAL ADMIN SUBPRODUCTOS (GLOBAL) -->
+<div id="modalAdminSubproductos" class="modal-overlay">
+  <div class="modal-content" style="max-width: 900px; max-height: 95vh;">
+    <div class="modal-header">
+      <h2>📦 Administrar Subproductos</h2>
+      <button class="modal-close" onclick="cerrarAdminSubproductos()">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <div style="display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap;">
+        <select id="adminSubFiltroCategoria" onchange="cargarListaSubproductosAdmin()"
+                style="flex: 1; min-width: 200px; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
+          <option value="">Todas las categorías</option>
+        </select>
+        <input type="text" id="adminSubBuscar" placeholder="🔍 Buscar..."
+               oninput="cargarListaSubproductosAdmin()"
+               style="flex: 1; min-width: 200px; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
+        <button onclick="nuevoSubproducto()"
+                style="background: var(--accent); color: #000; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
+          ➕ Nuevo
+        </button>
+      </div>
+
+      <div id="adminListaSubproductos" class="admin-lista"></div>
+
+      <div id="adminFormSubproducto" class="hidden"
+           style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 20px;">
+        <h3 id="adminSubTituloForm" style="margin-bottom: 15px; color: var(--accent); font-size: 20px;">➕ Nuevo Subproducto</h3>
+
+        <input type="hidden" id="adminSubId">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Nombre *</label>
+        <input type="text" id="adminSubNombre" required placeholder="Ej: Queso Madurado"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Categoría *</label>
+        <select id="adminSubCategoria" required
+                style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;"></select>
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Precio USD (dejar en 0 para preguntar en caja)</label>
+        <input type="number" id="adminSubPrecio" step="0.01" min="0" value="0"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
+
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Orden (menor = primero)</label>
+        <input type="number" id="adminSubOrden" value="0"
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
+
+        <div style="display:flex; gap:10px; margin-top:20px;">
+          <button onclick="guardarSubproducto()"
+                  style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+            💾 Guardar
+          </button>
+          <button onclick="document.getElementById('adminFormSubproducto').classList.add('hidden')"
+                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+            Cancelar
+          </button>
+          <button id="btnEliminarSubproducto"
+                  onclick="eliminarSubproducto(parseInt(document.getElementById('adminSubId').value))"
+                  style="background:var(--red); color:white; border:none; padding:16px 22px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;"
+                  class="hidden">
+            🗑️
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CONFIGURACIÓN DE LETRAS -->
+<div id="modalConfigLetras" class="modal-overlay">
+  <div class="modal-content" style="max-width: 700px; max-height: 95vh;">
+    <div class="modal-header">
+      <h2>🔤 Tamaño de Letras</h2>
+      <button class="modal-close" onclick="cerrarConfiguracionLetras()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="background: rgba(180,255,57,0.1); border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: var(--text);">
+        💡 Ajusta el tamaño de las letras según tu preferencia. Los cambios se aplican al instante y se guardan en la tablet.
+      </div>
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        🏷️ Categorías: <span id="valCatNombre" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">17px</span>
+      </label>
+      <input type="range" id="sliderCatNombre" min="12" max="30" value="17" 
+             oninput="cambiarTamanoLetra('categoria-nombre', this.value, 'valCatNombre')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        📦 Subproductos: <span id="valSubNombre" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">20px</span>
+      </label>
+      <input type="range" id="sliderSubNombre" min="14" max="34" value="20"
+             oninput="cambiarTamanoLetra('subproducto', this.value, 'valSubNombre')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        🛒 Productos en pedido: <span id="valPedidoNombre" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">15px</span>
+      </label>
+      <input type="range" id="sliderPedidoNombre" min="12" max="24" value="15"
+             oninput="cambiarTamanoLetra('pedido-nombre', this.value, 'valPedidoNombre')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        💰 Totales USD/Bs: <span id="valTotales" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">22px</span>
+      </label>
+      <input type="range" id="sliderTotales" min="16" max="36" value="22"
+             oninput="cambiarTamanoLetra('total-value', this.value, 'valTotales')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        💵 Monto en teclado: <span id="valMontoDisplay" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">48px</span>
+      </label>
+      <input type="range" id="sliderMontoDisplay" min="30" max="80" value="48"
+             oninput="cambiarTamanoLetra('monto-display', this.value, 'valMontoDisplay')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        🏷️ Título de modal: <span id="valModalTitulo" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">30px</span>
+      </label>
+      <input type="range" id="sliderModalTitulo" min="20" max="44" value="30"
+             oninput="cambiarTamanoLetra('modal-header h2', this.value, 'valModalTitulo')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <label style="display:block; margin-top:16px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">
+        📋 Título de sección: <span id="valSeccionTitulo" style="color: var(--accent); font-family: 'JetBrains Mono', monospace;">24px</span>
+      </label>
+      <input type="range" id="sliderSeccionTitulo" min="16" max="36" value="24"
+             oninput="cambiarTamanoLetra('section-title', this.value, 'valSeccionTitulo')"
+             style="width: 100%; height: 8px; cursor: pointer;">
+
+      <div style="display: flex; gap: 10px; margin-top: 30px;">
+        <button onclick="resetearLetras()"
+                style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+          🔄 Resetear
+        </button>
+        <button onclick="cerrarConfiguracionLetras()"
+                style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+          ✓ Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <div id="toast-container" class="toast-container"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -334,6 +487,8 @@
 <script src="productos.js"></script>
 <script src="admin-productos.js"></script>
 <script src="admin-categorias.js"></script>
+<script src="admin-subproductos.js"></script>
+<script src="config-letras.js"></script>
 <script src="voice.js"></script>
 <script src="app.js"></script>
 
