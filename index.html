@@ -25,14 +25,14 @@
       <label for="tasa-bcv">Tasa BCV</label>
       <input type="number" id="tasa-bcv" placeholder="0.00" step="0.01" min="0">
       <button onclick="cargarTasa()" title="Actualizar desde API" 
-              style="background:var(--accent);border:none;border-radius:6px;padding:6px 10px;cursor:pointer;font-weight:bold;color:#000;">↻</button>
+              style="background:var(--accent);border:none;border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:bold;color:#000;font-size:16px;">↻</button>
     </div>
     <button onclick="abrirAdminCategorias()" title="Administrar categorías"
-            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:20px;width:44px;height:44px;border-radius:10px;cursor:pointer;">
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
       📁
     </button>
     <button onclick="abrirAdminProductos()" title="Administrar productos"
-            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:20px;width:44px;height:44px;border-radius:10px;cursor:pointer;">
+            style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
       ⚙️
     </button>
   </div>
@@ -86,7 +86,7 @@
 
 <!-- MODAL SUBPRODUCTOS -->
 <div id="modal-subproductos" class="modal-overlay">
-  <div class="modal-content" style="max-width: 600px; max-height: 90vh; display: flex; flex-direction: column;">
+  <div class="modal-content" style="max-width: 700px; max-height: 90vh; display: flex; flex-direction: column;">
     <div class="modal-header">
       <h2 id="modal-categoria-nombre">Categoría</h2>
       <button class="modal-close" onclick="cerrarModalSubproductos()">✕</button>
@@ -104,7 +104,7 @@
 
 <!-- MODAL MONTO -->
 <div id="modal-monto" class="modal-overlay">
-  <div class="modal-content">
+  <div class="modal-content" style="max-width: 600px;">
     <div class="modal-header">
       <h2>Monto en dólares</h2>
       <button class="modal-close" onclick="cerrarModalMonto()">✕</button>
@@ -141,7 +141,7 @@
 
 <!-- MODAL HISTÓRICO DE FACTURAS -->
 <div id="modal-historial" class="modal-overlay">
-  <div class="modal-content" style="max-width: 800px; max-height: 90vh; display: flex; flex-direction: column;">
+  <div class="modal-content" style="max-width: 900px; max-height: 90vh; display: flex; flex-direction: column;">
     <div class="modal-header">
       <h2>📋 Histórico de Facturas</h2>
       <button class="modal-close" onclick="cerrarHistorial()">✕</button>
@@ -149,31 +149,31 @@
     <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 12px;">
       
       <div id="resumen-dia" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
-        <div style="background: linear-gradient(135deg, #10B981 0%, #00A86B 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
-          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Facturas Hoy</div>
-          <div id="resumen-count" style="font-size: 22px; font-weight: 900; margin-top: 4px;">0</div>
+        <div style="background: linear-gradient(135deg, #10B981 0%, #00A86B 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Facturas Hoy</div>
+          <div id="resumen-count" style="font-size: 26px; font-weight: 900; margin-top: 4px;">0</div>
         </div>
-        <div style="background: linear-gradient(135deg, #2196F3 0%, #0070BA 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
-          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total USD Hoy</div>
-          <div id="resumen-usd" style="font-size: 22px; font-weight: 900; margin-top: 4px;">$0.00</div>
+        <div style="background: linear-gradient(135deg, #2196F3 0%, #0070BA 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total USD Hoy</div>
+          <div id="resumen-usd" style="font-size: 26px; font-weight: 900; margin-top: 4px;">$0.00</div>
         </div>
-        <div style="background: linear-gradient(135deg, #FFA000 0%, #FF6B00 100%); padding: 12px; border-radius: 10px; text-align: center; color: white;">
-          <div style="font-size: 10px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total Bs Hoy</div>
-          <div id="resumen-bs" style="font-size: 16px; font-weight: 900; margin-top: 4px;">0,00 Bs</div>
+        <div style="background: linear-gradient(135deg, #FFA000 0%, #FF6B00 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+          <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total Bs Hoy</div>
+          <div id="resumen-bs" style="font-size: 20px; font-weight: 900; margin-top: 4px;">0,00 Bs</div>
         </div>
       </div>
       
       <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
         <input type="date" id="filtro-fecha-historial" 
                onchange="cargarHistorialPorFecha(this.value)"
-               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+               style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="cargarHistorialPorFecha('')" 
-                style="padding: 10px 16px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;">
+                style="padding: 12px 20px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           Ver Hoy
         </button>
       </div>
       
-      <div id="historial-lista" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px;"></div>
+      <div id="historial-lista" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 10px;"></div>
       
     </div>
   </div>
@@ -190,9 +190,9 @@
       <div style="display: flex; gap: 10px; margin-bottom: 15px;">
         <input type="text" id="adminBuscar" placeholder="🔍 Buscar producto..." 
                oninput="buscarEnAdmin(this.value)"
-               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+               style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="nuevoProducto()" 
-                style="background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer;">
+                style="background: var(--accent); color: #000; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           ➕ Nuevo
         </button>
       </div>
@@ -201,49 +201,49 @@
       
       <div id="adminFormProducto" class="hidden" 
            style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 20px;">
-        <h3 id="adminTituloForm" style="margin-bottom: 15px; color: var(--accent);">➕ Nuevo Producto</h3>
+        <h3 id="adminTituloForm" style="margin-bottom: 15px; color: var(--accent); font-size: 20px;">➕ Nuevo Producto</h3>
         
         <input type="hidden" id="adminProductoId">
         
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Nombre del producto *</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Nombre del producto *</label>
         <input type="text" id="adminProductoNombre" required 
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
         
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Categoría *</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Categoría *</label>
         <select id="adminProductoCategoria" required 
-                style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);"></select>
+                style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;"></select>
         
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Precio (USD) *</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Precio (USD) *</label>
         <input type="number" id="adminProductoPrecio" step="0.01" min="0" required 
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
         
-        <label style="display:flex; align-items:center; gap:10px; margin-top:16px; font-weight:700; font-size:13px; color:var(--text);">
-          <input type="checkbox" id="adminProductoIVA" checked style="width:20px; height:20px;">
+        <label style="display:flex; align-items:center; gap:10px; margin-top:16px; font-weight:700; font-size:15px; color:var(--text);">
+          <input type="checkbox" id="adminProductoIVA" checked style="width:22px; height:22px;">
           ¿Tiene IVA (16%)?
         </label>
         
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Palabras clave (separadas por coma)</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Palabras clave (separadas por coma)</label>
         <input type="text" id="adminProductoPalabras" placeholder="Ej: madurado, queso, curado"
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
         
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Imagen</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Imagen</label>
         <input type="file" id="adminProductoImagen" accept="image/*" onchange="subirImagenProducto(event)"
-               style="width:100%; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:10px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:14px;">
         <img id="adminProductoImagenPreview" src="imagenes/default.png" 
              style="max-width:150px; max-height:150px; margin-top:10px; border-radius:8px; border:2px solid var(--border);">
         
         <div style="display:flex; gap:10px; margin-top:20px;">
           <button onclick="guardarProducto()" 
-                  style="flex:1; background:var(--accent); color:#000; border:none; padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+                  style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             💾 Guardar
           </button>
           <button onclick="document.getElementById('adminFormProducto').classList.add('hidden')" 
-                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             Cancelar
           </button>
           <button id="btnEliminarProducto" 
                   onclick="eliminarProducto(parseInt(document.getElementById('adminProductoId').value))" 
-                  style="background:var(--red); color:white; border:none; padding:14px 20px; border-radius:8px; font-weight:800; cursor:pointer;"
+                  style="background:var(--red); color:white; border:none; padding:16px 22px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;"
                   class="hidden">
             🗑️
           </button>
@@ -265,9 +265,9 @@
       <div style="display: flex; gap: 10px; margin-bottom: 15px;">
         <input type="text" id="adminCatBuscar" placeholder="🔍 Buscar categoría..."
                oninput="filtrarCategoriasAdmin(this.value)"
-               style="flex: 1; padding: 10px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text);">
+               style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="nuevaCategoria()"
-                style="background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 800; cursor: pointer;">
+                style="background: var(--accent); color: #000; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           ➕ Nueva
         </button>
       </div>
@@ -276,47 +276,47 @@
 
       <div id="adminFormCategoria" class="hidden"
            style="margin-top: 20px; border-top: 2px solid var(--border); padding-top: 20px;">
-        <h3 id="adminCatTituloForm" style="margin-bottom: 15px; color: var(--accent);">➕ Nueva Categoría</h3>
+        <h3 id="adminCatTituloForm" style="margin-bottom: 15px; color: var(--accent); font-size: 20px;">➕ Nueva Categoría</h3>
 
         <input type="hidden" id="adminCatId">
 
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Nombre *</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Nombre *</label>
         <input type="text" id="adminCatNombre" required
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
 
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Emoji (ej: 🥚 🥛 🍞)</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Emoji (ej: 🥚 🥛 🍞)</label>
         <input type="text" id="adminCatEmoji" placeholder="📦" maxlength="4"
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:24px; text-align:center;">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:26px; text-align:center;">
 
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Orden (menor = primero)</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Orden (menor = primero)</label>
         <input type="number" id="adminCatOrden" value="0"
-               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
+               style="width:100%; padding:12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px;">
 
-        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:12px; color: var(--text-muted);">Foto de la categoría</label>
+        <label style="display:block; margin-top:12px; margin-bottom:6px; font-weight:700; font-size:14px; color: var(--text-muted);">Foto de la categoría</label>
         <div style="display:flex; gap:10px; align-items:flex-start;">
           <div style="flex:1;">
             <input type="file" id="adminCatImagen" accept="image/*" onchange="subirImagenCategoria(event)"
-                   style="width:100%; padding:8px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text);">
-            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">
+                   style="width:100%; padding:10px; background:var(--bg); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:14px;">
+            <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">
               💡 Sube una foto (máx 2MB)
             </div>
           </div>
           <img id="adminCatImagenPreview" src="imagenes/default.png"
-               style="width:80px; height:80px; object-fit:cover; border-radius:10px; border:2px solid var(--border);">
+               style="width:100px; height:100px; object-fit:cover; border-radius:10px; border:2px solid var(--border);">
         </div>
 
         <div style="display:flex; gap:10px; margin-top:20px;">
           <button onclick="guardarCategoria()"
-                  style="flex:1; background:var(--accent); color:#000; border:none; padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+                  style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             💾 Guardar
           </button>
           <button onclick="document.getElementById('adminFormCategoria').classList.add('hidden')"
-                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:14px; border-radius:8px; font-weight:800; cursor:pointer;">
+                  style="flex:1; background:transparent; color:var(--text-muted); border:2px solid var(--border); padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             Cancelar
           </button>
           <button id="btnEliminarCategoria"
                   onclick="eliminarCategoria(parseInt(document.getElementById('adminCatId').value))"
-                  style="background:var(--red); color:white; border:none; padding:14px 20px; border-radius:8px; font-weight:800; cursor:pointer;"
+                  style="background:var(--red); color:white; border:none; padding:16px 22px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;"
                   class="hidden">
             🗑️
           </button>
