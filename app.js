@@ -1,6 +1,6 @@
 // =========================================================
-// app.js - RICODELICO CAJA v8.0
-// Bloqueo zoom + Botón ⌫ + Limpieza automática al cerrar ticket
+// app.js - RICODELICO CAJA v8.1
+// Bloqueo zoom sin afectar botones + Botón ⌫
 // =========================================================
 
 // =========================================================
@@ -309,7 +309,6 @@ function renderSubproductos(lista) {
     </div>
   `).join("");
 
-  // Re-aplicar tamaños de letra guardados
   if (typeof cargarTamanosGuardados === 'function') {
     setTimeout(() => cargarTamanosGuardados(), 50);
   }
@@ -360,10 +359,8 @@ function cerrarModalMonto() {
 // =========================================================
 function presionarTecla(tecla) {
   if (tecla === 'C') {
-    // Limpiar todo
     montoActualTexto = "";
   } else if (tecla === '⌫') {
-    // Borrar solo el último dígito
     if (montoActualTexto.length > 0) {
       montoActualTexto = montoActualTexto.slice(0, -1);
     }
@@ -457,7 +454,6 @@ function renderPedido() {
     lista.appendChild(li);
   });
 
-  // Re-aplicar tamaños de letra guardados
   if (typeof cargarTamanosGuardados === 'function') {
     setTimeout(() => cargarTamanosGuardados(), 50);
   }
@@ -489,7 +485,7 @@ function limpiarPedido() {
 }
 
 // =========================================================
-// IMPRIMIR TICKET (con limpieza automática al cerrar)
+// IMPRIMIR TICKET
 // =========================================================
 async function imprimirTicket() {
   if (pedido.length === 0) {
@@ -664,12 +660,10 @@ async function imprimirTicket() {
 
   await guardarEnHistorial({ numero, fecha, hora, items: [...pedido], totalUSD, totalBs, tasaBCV });
   
-  // ✅ Limpiar el pedido automáticamente después de cerrar la ventana
   const checkClosed = setInterval(() => {
     if (printWindow.closed) {
       clearInterval(checkClosed);
       
-      // Limpiar pedido
       pedido = [];
       renderPedido();
       actualizarTotales();
