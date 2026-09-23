@@ -1073,3 +1073,74 @@ input[type="range"]::-moz-range-thumb {
   border: none;
   box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
 }
+/* ===== EVITAR ZOOM CON DOBLE TAP ===== */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+button, .categoria, .subproducto, .btn, input {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ===== BOTÓN DE BORRAR UN DÍGITO (⌫) ===== */
+.teclado-numerico .btn-borrar {
+  background: rgba(255, 160, 0, 0.15);
+  color: var(--orange);
+  border-color: rgba(255, 160, 0, 0.3);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.teclado-numerico .btn-borrar:active {
+  background: var(--orange);
+  color: white;
+  transform: scale(0.95);
+}
+
+/* ===== CONFIGURADOR DE LETRAS (sliders) ===== */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  outline: none;
+  margin-bottom: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
+  transition: all 0.2s;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
+}
