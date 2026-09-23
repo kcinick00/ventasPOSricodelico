@@ -1,6 +1,6 @@
 // =========================================================
 // productos.js - Carga de productos desde Supabase y CSV
-// v3.0 - Soporte para imágenes de categorías
+// v4.0 - Imágenes de categorías grandes
 // =========================================================
 
 let CATEGORIAS = [];
@@ -169,7 +169,7 @@ function buscarProducto(texto) {
 }
 
 // =========================================================
-// RENDER CATEGORÍAS (con soporte de imágenes)
+// RENDER CATEGORÍAS (con imágenes GRANDES)
 // =========================================================
 function renderCategorias() {
   const grid = document.getElementById("categorias-grid");
@@ -182,22 +182,28 @@ function renderCategorias() {
     div.className = "categoria";
     div.onclick = () => seleccionarCategoria(cat);
 
-    let iconoHTML;
+    // Contenido del cuadro de imagen
+    let imagenHTML;
     if (cat.imagen && cat.imagen.trim() !== '' && !cat.imagen.includes('default.png')) {
-      iconoHTML = `
-        <div style="width: 60px; height: 60px; border-radius: 12px; overflow: hidden; background: var(--bg-soft); display: flex; align-items: center; justify-content: center;">
+      // Foto real
+      imagenHTML = `
+        <div class="categoria-imagen">
           <img src="${cat.imagen}" alt="${cat.nombre}"
-               style="width: 100%; height: 100%; object-fit: cover;"
-               onerror="this.parentElement.innerHTML='<span style=\\'font-size:32px;\\'>${cat.emoji || '📦'}</span>'">
+               onerror="this.parentElement.innerHTML='<span class=\\'categoria-emoji\\'>${cat.emoji || '📦'}</span>'">
         </div>
       `;
     } else {
-      iconoHTML = `<span class="categoria-emoji">${cat.emoji || '📦'}</span>`;
+      // Solo emoji (grande, centrado)
+      imagenHTML = `
+        <div class="categoria-imagen">
+          <span class="categoria-emoji">${cat.emoji || '📦'}</span>
+        </div>
+      `;
     }
 
     div.innerHTML = `
       ${count > 0 ? `<span class="categoria-count">${count}</span>` : ""}
-      ${iconoHTML}
+      ${imagenHTML}
       <span class="categoria-nombre">${cat.nombre}</span>
     `;
     grid.appendChild(div);
