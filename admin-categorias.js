@@ -1,11 +1,12 @@
 // =========================================================
 // admin-categorias.js - Categorías + Subproductos integrados
-// v3.0 - LIMPIO
+// v3.1 - LIMPIO (verificado)
 // =========================================================
 
-let categoriaEditando = null;
 let categoriasAdminCache = [];
 let subproductosCategoriaActual = [];
+var categoriaEditando = null;
+var _imagenCategoriaPendiente = null;
 
 // =========================================================
 // ABRIR / CERRAR
@@ -162,7 +163,7 @@ function subirImagenCategoria(event) {
 
   const preview = document.getElementById('adminCatImagenPreview');
   preview.src = URL.createObjectURL(file);
-  window._imagenCategoriaPendiente = file;
+  _imagenCategoriaPendiente = file;
 }
 
 async function subirImagenCategoriaASupabase(file, nombreCategoria) {
@@ -204,10 +205,10 @@ async function guardarCategoria() {
   }
 
   let imagenUrl = document.getElementById('adminCatImagenPreview').src;
-  if (window._imagenCategoriaPendiente) {
-    const urlSubida = await subirImagenCategoriaASupabase(window._imagenCategoriaPendiente, nombre);
+  if (_imagenCategoriaPendiente) {
+    const urlSubida = await subirImagenCategoriaASupabase(_imagenCategoriaPendiente, nombre);
     if (urlSubida) imagenUrl = urlSubida;
-    window._imagenCategoriaPendiente = null;
+    _imagenCategoriaPendiente = null;
   }
 
   const datos = {
