@@ -1,132 +1,163 @@
 // =========================================================
-// admin-categorias.js - Administración de Categorías
+// admin-productos.js - Administración de Productos (Inventario)
 // =========================================================
 
-let categoriaEditando = null;
-let categoriasAdminCache = [];
+let productoEditando = null;
 
 // =========================================================
 // ABRIR / CERRAR
 // =========================================================
-async function abrirAdminCategorias() {
-  console.log("📁 Abriendo admin categorías");
-  await cargarListaCategoriasAdmin();
-  document.getElementById('modalAdminCategorias').classList.add('active');
+async function abrirAdminProductos() {
+  console.log("⚙️ Abriendo admin productos");
+  await cargarCategoriasSelect();
+  await cargarListaProductosAdmin();
+  document.getElementById('modalAdminProductos').classList.add('active');
 }
 
-function cerrarAdminCategorias() {
-  document.getElementById('modalAdminCategorias').classList.remove('active');
-  categoriaEditando = null;
-  document.getElementById('adminFormCategoria').classList.add('hidden');
-  document.getElementById('adminCatBuscar').value = '';
+function cerrarAdminProductos() {
+  document.getElementById('modalAdminProductos').classList.remove('active');
+  productoEditando = null;
+  document.getElementById('adminFormProducto').classList.add('hidden');
+  document.getElementById('adminBuscar').value = '';
 }
 
 // =========================================================
-// CARGAR LISTA
+// CARGAR SELECT DE CATEGORÍAS
 // =========================================================
-async function cargarListaCategoriasAdmin(filtro = '') {
-  const contenedor = document.getElementById('adminListaCategorias');
+async function cargarCategoriasSelect() {
+  const select = document.getElementById('adminProductoCategoria');
+  if (!select) return;
+  
+  select.innerHTML = '<option value="">-- Selecciona --</option>';
+  CATEGORIAS.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat.id;
+    opt.textContent = `${cat.emoji || '📦'} ${cat.nombre}`;
+    select.appendChild(opt);
+  });
+}
+
+// =========================================================
+// CARGAR LISTA DE PRODUCTOS
+// =========================================================
+async function cargarListaProductosAdmin(filtro = '') {
+  const contenedor = document.getElementById('adminListaProductos');
   if (!contenedor) return;
 
   contenedor.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Cargando...</div>';
 
   try {
-    if (!supabaseClient) throw new Error("Supabase no conectado");
-
-    const { data, error } = await supabaseClient
-      .from('categorias_pos')
+    let query = supabaseClient
+      .from('productos')
       .select('*')
-      .order('orden', { ascending: true });
+      .order('nombre', { ascending: true });
 
+    const { data, error } = await query;
     if (error) throw error;
 
-    categoriasAdminCache = data || [];
+    let lista = data || [];
 
-    let lista = categoriasAdminCache;
     if (filtro) {
       const f = normalizarNombre(filtro);
-      lista = lista.filter(c => normalizarNombre(c.nombre).includes(f));
+      lista = lista.filter(p => 
+        normalizarNombre(p.nombre).includes(f) ||
+        (p.nombre_normalizado || '').includes(f)
+      );
     }
 
     if (lista.length === 0) {
-      contenedor.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Sin categorías</div>';
+      contenedor.innerHTML = '<div style="text-align:center; padding:20px; color:#888;">Sin productos</div>';
       return;
     }
 
-    contenedor.innerHTML = lista.map(c => {
-      const totalProds = PRODUCTOS.filter(p => p.categoriaId === c.id).length;
-
-      let iconoHTML;
-      if (c.imagen && c.imagen.trim() !== '') {
-        iconoHTML = `<img src="${c.imagen}" alt="${c.nombre}" onerror="this.src='imagenes/default.png'">`;
-      } else {
-        iconoHTML = `<div class="admin-cat-emoji">${c.emoji || '📦'}</div>`;
-      }
+    contenedor.innerHTML = lista.map(p => {
+      const precio = parseFloat(p.precio_venta_usd) || 0;
+      const tieneIva = parseFloat(p.iva) > 0;
 
       return `
-        <div class="admin-categoria-item" onclick="editarCategoria(${c.id})">
-          ${iconoHTML}
-          <div class="admin-categoria-info">
-            <div class="admin-categoria-nombre">${c.nombre}</div>
-            <div class="admin-categoria-meta">
-              ${c.emoji ? c.emoji + ' · ' : ''}${totalProds} subproducto${totalProds !== 1 ? 's' : ''} · Orden ${c.orden || 0}
+        <div class="admin-producto-item" onclick="editarProducto(${p.id})">
+          <img src="${p.imagen || 'imagenes/default.png'}" alt="${p.nombre}" onerror="this.src='imagenes/default.png'">
+          <div class="admin-producto-info">
+            <div class="admin-producto-nombre">${p.nombre}</div>
+            <div class="admin-producto-cat">
+              ${tieneIva ? '✅ IVA' : '🚫 Exento'} · Stock: ${p.stock || 0}
             </div>
+            <div class="admin-producto-precio">$${precio.toFixed(2)}</div>
           </div>
-          <button class="btn-eliminar-admin" onclick="event.stopPropagation(); eliminarCategoria(${c.id})">🗑️</button>
+          <button class="btn-eliminar-admin" onclick="event.stopPropagation(); eliminarProducto(${p.id})">🗑️</button>
         </div>
       `;
     }).join('');
 
   } catch (error) {
-    console.error("❌ Error cargando categorías:", error);
+    console.error("❌ Error cargando productos:", error);
     contenedor.innerHTML = '<div style="text-align:center; padding:20px; color:#f87171;">Error al cargar</div>';
   }
 }
 
-function filtrarCategoriasAdmin(texto) {
-  cargarListaCategoriasAdmin(texto);
+function buscarEnAdmin(texto) {
+  cargarListaProductosAdmin(texto);
 }
 
 // =========================================================
-// NUEVA CATEGORÍA
+// NUEVO PRODUCTO
 // =========================================================
-function nuevaCategoria() {
-  categoriaEditando = null;
-  document.getElementById('adminCatId').value = '';
-  document.getElementById('adminCatNombre').value = '';
-  document.getElementById('adminCatEmoji').value = '📦';
-  document.getElementById('adminCatOrden').value = 0;
-  document.getElementById('adminCatImagenPreview').src = 'imagenes/default.png';
-  document.getElementById('adminCatTituloForm').textContent = '➕ Nueva Categoría';
-  document.getElementById('btnEliminarCategoria').classList.add('hidden');
-  document.getElementById('adminFormCategoria').classList.remove('hidden');
-  document.getElementById('adminCatNombre').focus();
+function nuevoProducto() {
+  productoEditando = null;
+  document.getElementById('adminProductoId').value = '';
+  document.getElementById('adminProductoNombre').value = '';
+  document.getElementById('adminProductoCategoria').value = '';
+  document.getElementById('adminProductoPrecio').value = '';
+  document.getElementById('adminProductoIVA').checked = true;
+  document.getElementById('adminProductoPalabras').value = '';
+  document.getElementById('adminProductoImagenPreview').src = 'imagenes/default.png';
+  document.getElementById('adminTituloForm').textContent = '➕ Nuevo Producto';
+  document.getElementById('btnEliminarProducto').classList.add('hidden');
+  document.getElementById('adminFormProducto').classList.remove('hidden');
+  document.getElementById('adminProductoNombre').focus();
 }
 
 // =========================================================
-// EDITAR CATEGORÍA
+// EDITAR PRODUCTO
 // =========================================================
-function editarCategoria(id) {
-  const cat = categoriasAdminCache.find(c => c.id === id);
-  if (!cat) return;
+function editarProducto(id) {
+  const prod = (window._productosAdminCache || []).find(p => p.id === id);
+  if (!prod) {
+    // Si no está en caché, buscar de nuevo
+    supabaseClient
+      .from('productos')
+      .select('*')
+      .eq('id', id)
+      .single()
+      .then(({ data, error }) => {
+        if (!error && data) {
+          abrirEditarProducto(data);
+        }
+      });
+    return;
+  }
+  abrirEditarProducto(prod);
+}
 
-  categoriaEditando = cat;
-
-  document.getElementById('adminCatId').value = cat.id;
-  document.getElementById('adminCatNombre').value = cat.nombre || '';
-  document.getElementById('adminCatEmoji').value = cat.emoji || '';
-  document.getElementById('adminCatOrden').value = cat.orden || 0;
-  document.getElementById('adminCatImagenPreview').src = cat.imagen || 'imagenes/default.png';
-  document.getElementById('adminCatTituloForm').textContent = '✏️ Editar Categoría';
-  document.getElementById('btnEliminarCategoria').classList.remove('hidden');
-  document.getElementById('adminFormCategoria').classList.remove('hidden');
-  document.getElementById('adminFormCategoria').scrollIntoView({ behavior: 'smooth' });
+function abrirEditarProducto(prod) {
+  productoEditando = prod;
+  document.getElementById('adminProductoId').value = prod.id;
+  document.getElementById('adminProductoNombre').value = prod.nombre || '';
+  document.getElementById('adminProductoCategoria').value = prod.categoria_id || '';
+  document.getElementById('adminProductoPrecio').value = parseFloat(prod.precio_venta_usd) || 0;
+  document.getElementById('adminProductoIVA').checked = parseFloat(prod.iva) > 0;
+  document.getElementById('adminProductoPalabras').value = (prod.palabras_clave || []).join(', ');
+  document.getElementById('adminProductoImagenPreview').src = prod.imagen || 'imagenes/default.png';
+  document.getElementById('adminTituloForm').textContent = '✏️ Editar Producto';
+  document.getElementById('btnEliminarProducto').classList.remove('hidden');
+  document.getElementById('adminFormProducto').classList.remove('hidden');
+  document.getElementById('adminFormProducto').scrollIntoView({ behavior: 'smooth' });
 }
 
 // =========================================================
 // SUBIR IMAGEN
 // =========================================================
-function subirImagenCategoria(event) {
+function subirImagenProducto(event) {
   const file = event.target.files[0];
   if (!file) return;
 
@@ -139,16 +170,16 @@ function subirImagenCategoria(event) {
     return;
   }
 
-  const preview = document.getElementById('adminCatImagenPreview');
+  const preview = document.getElementById('adminProductoImagenPreview');
   preview.src = URL.createObjectURL(file);
-  window._imagenCategoriaPendiente = file;
+  window._imagenProductoPendiente = file;
 }
 
-async function subirImagenCategoriaASupabase(file, nombreCategoria) {
+async function subirImagenProductoASupabase(file, nombreProducto) {
   try {
     const ext = file.name.split('.').pop();
-    const nombreLimpio = normalizarNombre(nombreCategoria).replace(/\s+/g, '_');
-    const nombreArchivo = `cat_${nombreLimpio}_${Date.now()}.${ext}`;
+    const nombreLimpio = normalizarNombre(nombreProducto).replace(/\s+/g, '_');
+    const nombreArchivo = `prod_${nombreLimpio}_${Date.now()}.${ext}`;
 
     const { error } = await supabaseClient.storage
       .from('productos')
@@ -160,7 +191,6 @@ async function subirImagenCategoriaASupabase(file, nombreCategoria) {
       .from('productos')
       .getPublicUrl(nombreArchivo);
 
-    console.log("✅ Imagen subida:", urlData.publicUrl);
     return urlData.publicUrl;
 
   } catch (error) {
@@ -170,96 +200,93 @@ async function subirImagenCategoriaASupabase(file, nombreCategoria) {
 }
 
 // =========================================================
-// GUARDAR CATEGORÍA
+// GUARDAR PRODUCTO
 // =========================================================
-async function guardarCategoria() {
-  const nombre = document.getElementById('adminCatNombre').value.trim();
-  const emoji = document.getElementById('adminCatEmoji').value.trim() || '📦';
-  const orden = parseInt(document.getElementById('adminCatOrden').value) || 0;
+async function guardarProducto() {
+  const nombre = document.getElementById('adminProductoNombre').value.trim();
+  const categoriaId = parseInt(document.getElementById('adminProductoCategoria').value);
+  const precio = parseFloat(document.getElementById('adminProductoPrecio').value) || 0;
+  const tieneIVA = document.getElementById('adminProductoIVA').checked;
+  const palabrasTexto = document.getElementById('adminProductoPalabras').value.trim();
 
   if (!nombre) {
     alert('El nombre es obligatorio');
     return;
   }
+  if (!precio || precio <= 0) {
+    alert('El precio debe ser mayor a 0');
+    return;
+  }
 
-  let imagenUrl = document.getElementById('adminCatImagenPreview').src;
-  if (window._imagenCategoriaPendiente) {
-    const urlSubida = await subirImagenCategoriaASupabase(window._imagenCategoriaPendiente, nombre);
+  const palabrasClave = palabrasTexto
+    ? palabrasTexto.split(',').map(p => p.trim()).filter(p => p)
+    : [];
+
+  let imagenUrl = document.getElementById('adminProductoImagenPreview').src;
+  if (window._imagenProductoPendiente) {
+    const urlSubida = await subirImagenProductoASupabase(window._imagenProductoPendiente, nombre);
     if (urlSubida) imagenUrl = urlSubida;
-    window._imagenCategoriaPendiente = null;
+    window._imagenProductoPendiente = null;
   }
 
   const datos = {
     nombre: nombre,
-    emoji: emoji,
-    orden: orden,
-    imagen: imagenUrl
+    nombre_normalizado: normalizarNombre(nombre),
+    categoria_id: categoriaId || null,
+    precio_venta_usd: precio,
+    iva: tieneIVA ? 16 : 0,
+    palabras_clave: palabrasClave,
+    imagen: imagenUrl,
+    updated_at: new Date().toISOString()
   };
 
   try {
-    if (categoriaEditando) {
+    if (productoEditando) {
       const { error } = await supabaseClient
-        .from('categorias_pos')
+        .from('productos')
         .update(datos)
-        .eq('id', categoriaEditando.id);
-
+        .eq('id', productoEditando.id);
       if (error) throw error;
-      console.log("✅ Categoría actualizada");
-
+      showToast('✅ Producto actualizado', 'success');
     } else {
+      datos.activo = true;
       const { error } = await supabaseClient
-        .from('categorias_pos')
+        .from('productos')
         .insert([datos]);
-
       if (error) throw error;
-      console.log("✅ Categoría creada");
+      showToast('✅ Producto creado', 'success');
     }
 
     await cargarProductos();
-    await cargarListaCategoriasAdmin();
+    await cargarListaProductosAdmin();
 
-    document.getElementById('adminFormCategoria').classList.add('hidden');
-    categoriaEditando = null;
-
-    showToast('✅ Categoría guardada', 'success');
+    document.getElementById('adminFormProducto').classList.add('hidden');
+    productoEditando = null;
 
   } catch (error) {
-    console.error("❌ Error guardando categoría:", error);
-    alert('Error al guardar: ' + error.message);
+    console.error("❌ Error guardando:", error);
+    alert('Error: ' + error.message);
   }
 }
 
 // =========================================================
-// ELIMINAR CATEGORÍA
+// ELIMINAR PRODUCTO
 // =========================================================
-async function eliminarCategoria(id) {
-  const cat = categoriasAdminCache.find(c => c.id === id);
-  if (!cat) return;
-
-  const totalProds = PRODUCTOS.filter(p => p.categoriaId === id).length;
-
-  let mensaje = `¿Eliminar la categoría "${cat.nombre}"?`;
-  if (totalProds > 0) {
-    mensaje += `\n\n⚠️ También se eliminarán ${totalProds} subproductos asociados.`;
-  }
-  mensaje += `\n\nEsta acción NO se puede deshacer.`;
-
-  if (!confirm(mensaje)) return;
+async function eliminarProducto(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
 
   try {
     const { error } = await supabaseClient
-      .from('categorias_pos')
+      .from('productos')
       .delete()
       .eq('id', id);
 
     if (error) throw error;
 
-    console.log("✅ Categoría eliminada");
+    showToast('✅ Producto eliminado', 'success');
     await cargarProductos();
-    await cargarListaCategoriasAdmin();
-    document.getElementById('adminFormCategoria').classList.add('hidden');
-
-    showToast('✅ Categoría eliminada', 'success');
+    await cargarListaProductosAdmin();
+    document.getElementById('adminFormProducto').classList.add('hidden');
 
   } catch (error) {
     console.error("❌ Error eliminando:", error);
