@@ -1,6 +1,6 @@
 // =========================================================
 // admin-categorias.js - Categorías + Subproductos integrados
-// v3.0
+// v3.0 - LIMPIO
 // =========================================================
 
 let categoriaEditando = null;
