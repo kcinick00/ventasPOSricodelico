@@ -1,6 +1,6 @@
 // =========================================================
 // voice.js - Reconocimiento de voz para RICODELICO
-// v2.0 - Integrado con categorías + subproductos + inventario
+// v3.0 - Integrado + precio automático si no menciona monto
 // =========================================================
 
 let recognition = null;
@@ -155,20 +155,14 @@ async function procesarDictado(texto) {
     .replace(/de\s+/g, " ")
     .trim();
   
-  // Detectar el monto
-  const monto = parsearMontoVoz(textoLimpio);
+  // ========================================
+  // 1. Intentar detectar el monto
+  // ========================================
+  let monto = parsearMontoVoz(textoLimpio);
   
-  if (!monto || monto <= 0) {
-    showToast(`No entendí el monto en: "${texto}"`, "remove");
-    return;
-  }
-  
-  if (tasaBCV <= 0) {
-    showToast("⚠️ Configura la tasa BCV primero", "remove");
-    return;
-  }
-  
-  // Extraer el nombre del producto (quitar el número)
+  // ========================================
+  // 2. Extraer el nombre del producto
+  // ========================================
   let productoTexto = textoLimpio
     .replace(/\d+(?:[.,]\d+)?/g, "")
     .replace(/\s+/g, " ")
@@ -181,7 +175,9 @@ async function procesarDictado(texto) {
   
   console.log("🔍 Buscando:", productoTexto);
   
-  // Buscar el producto en TODAS las fuentes
+  // ========================================
+  // 3. Buscar el producto en TODAS las fuentes
+  // ========================================
   const resultado = await buscarProductoEnTodo(productoTexto);
   
   if (!resultado) {
@@ -189,7 +185,30 @@ async function procesarDictado(texto) {
     return;
   }
   
-  // Agregar al pedido
+  // ========================================
+  // 4. Si no hay monto, usar el precio del producto
+  // ========================================
+  if (!monto || monto <= 0) {
+    if (resultado.precioUSD && resultado.precioUSD > 0) {
+      monto = resultado.precioUSD;
+      console.log(`💰 Usando precio del producto: $${monto}`);
+    } else {
+      showToast(`No entendí el monto para "${resultado.nombre}"`, "remove");
+      return;
+    }
+  }
+  
+  // ========================================
+  // 5. Validar tasa BCV
+  // ========================================
+  if (tasaBCV <= 0) {
+    showToast("⚠️ Configura la tasa BCV primero", "remove");
+    return;
+  }
+  
+  // ========================================
+  // 6. Agregar al pedido
+  // ========================================
   pedido.push({
     id: resultado.id,
     nombre: resultado.nombre,
@@ -204,7 +223,7 @@ async function procesarDictado(texto) {
 }
 
 // =========================================================
-// BUSCAR PRODUCTO EN TODO (subproductos + categorías + inventario)
+// BUSCAR PRODUCTO EN TODO (subproductos + inventario + caché)
 // =========================================================
 async function buscarProductoEnTodo(texto) {
   const t = normalizarNombre(texto);
@@ -220,10 +239,10 @@ async function buscarProductoEnTodo(texto) {
       .eq('activo', true);
     
     if (subs && subs.length > 0) {
-      // Coincidencia exacta primero
+      // Coincidencia exacta
       let match = subs.find(s => normalizarNombre(s.nombre) === t);
       
-      // Si no, coincidencia parcial
+      // Coincidencia parcial
       if (!match) {
         match = subs.find(s => {
           const ns = normalizarNombre(s.nombre);
@@ -231,7 +250,7 @@ async function buscarProductoEnTodo(texto) {
         });
       }
       
-      // Si no, buscar por palabra clave
+      // Por palabras clave
       if (!match) {
         match = subs.find(s => {
           const palabras = normalizarNombre(s.nombre).split(' ');
@@ -298,7 +317,7 @@ async function buscarProductoEnTodo(texto) {
   }
   
   // ========================================
-  // 3. BUSCAR EN PRODUCTOS YA CARGADOS
+  // 3. BUSCAR EN CACHÉ LOCAL
   // ========================================
   const match = buscarProducto(texto);
   if (match) {
