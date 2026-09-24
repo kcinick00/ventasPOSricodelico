@@ -1,4 +1,4 @@
-const CACHE_NAME = "ricodelico-caja-v2.9";
+const CACHE_NAME = "ricodelico-caja-v3.0";
 const FILES_TO_CACHE = [
   "index.html", "app.js", "voice.js", "productos.js",
   "admin-productos.js", "supabase.js", "styles.css", "manifest.json"
