@@ -634,8 +634,8 @@ header::before {
 
 .subproducto {
   padding: 24px 18px;
-  background: var(--bg);
-  border: 2px solid var(--border);
+  background: rgba(180, 255, 57, 0.12);   /* 🟢 verde translúcido */
+  border: 2px solid var(--accent);        /* borde verde */
   border-radius: 14px;
   cursor: pointer;
   text-align: center;
@@ -650,12 +650,15 @@ header::before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 0 0 rgba(180, 255, 57, 0);
 }
 
 .subproducto:hover, .subproducto:active {
-  border-color: var(--accent);
-  background: rgba(180, 255, 57, 0.08);
+  background: var(--accent);              /* 🟢 verde sólido al tocar */
+  border-color: var(--accent-dark);
+  color: #0F0F0F;                         /* texto negro al tocar */
   transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(180, 255, 57, 0.45);
 }
 
 /* ===== MODAL MONTO ===== */
