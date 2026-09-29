@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no">
-<meta name="theme-color" content="#0F0F0F">
+<meta name="theme-color" content="#FDFBF7">
 <title>RICODELICO - Caja</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="imagenes/default.png">
@@ -32,16 +32,16 @@
 </script>
 
 <header>
-  <div class="brand">
-    <h1>RICO<span>DELICO</span></h1>
-    <p>J-50395785-9 · Caja</p>
+  <div class="brand" style="display: flex; align-items: center; gap: 15px;">
+    <img src="imagenes/logo-ricodelico.png" alt="Ricodélico Charcutería Artesanal" style="height: 75px; width: auto; object-fit: contain;">
+    <p style="margin: 0; font-size: 12px; color: var(--text-muted);">J-50395785-9 · Caja</p>
   </div>
   <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
     <div class="tasa-box">
       <label for="tasa-bcv">Tasa BCV</label>
       <input type="number" id="tasa-bcv" placeholder="0.00" step="0.01" min="0">
       <button onclick="cargarTasa()" title="Actualizar desde API" 
-              style="background:var(--accent);border:none;border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:bold;color:#000;font-size:16px;">↻</button>
+              style="background:var(--accent);border:none;border-radius:6px;padding:8px 12px;cursor:pointer;font-weight:bold;color:#FFFFFF;font-size:16px;">↻</button>
     </div>
     <button onclick="abrirAdminCategorias()" title="Administrar categorías y subproductos"
             style="background:var(--card);border:1.5px solid var(--border);color:var(--text);font-size:22px;width:50px;height:50px;border-radius:10px;cursor:pointer;">
@@ -169,15 +169,15 @@
     <div class="modal-body" style="display: flex; flex-direction: column; overflow: hidden; padding: 12px;">
       
       <div id="resumen-dia" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; flex-shrink: 0;">
-        <div style="background: linear-gradient(135deg, #10B981 0%, #00A86B 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+        <div style="background: linear-gradient(135deg, #2E7D32 0%, #1B5E20 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
           <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Facturas Hoy</div>
           <div id="resumen-count" style="font-size: 26px; font-weight: 900; margin-top: 4px;">0</div>
         </div>
-        <div style="background: linear-gradient(135deg, #2196F3 0%, #0070BA 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+        <div style="background: linear-gradient(135deg, #D4A017 0%, #B8860B 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
           <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total USD Hoy</div>
           <div id="resumen-usd" style="font-size: 26px; font-weight: 900; margin-top: 4px;">$0.00</div>
         </div>
-        <div style="background: linear-gradient(135deg, #FFA000 0%, #FF6B00 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
+        <div style="background: linear-gradient(135deg, #D2691E 0%, #A0522D 100%); padding: 14px; border-radius: 10px; text-align: center; color: white;">
           <div style="font-size: 12px; font-weight: 800; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px;">Total Bs Hoy</div>
           <div id="resumen-bs" style="font-size: 20px; font-weight: 900; margin-top: 4px;">0,00 Bs</div>
         </div>
@@ -188,7 +188,7 @@
                onchange="cargarHistorialPorFecha(this.value)"
                style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="cargarHistorialPorFecha('')" 
-                style="padding: 12px 20px; background: var(--accent); color: #000; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
+                style="padding: 12px 20px; background: var(--accent); color: #FFFFFF; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           Ver Hoy
         </button>
       </div>
@@ -212,7 +212,7 @@
                oninput="buscarEnAdmin(this.value)"
                style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="nuevoProducto()" 
-                style="background: var(--accent); color: #000; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
+                style="background: var(--accent); color: #FFFFFF; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           ➕ Nuevo
         </button>
       </div>
@@ -254,7 +254,7 @@
         
         <div style="display:flex; gap:10px; margin-top:20px;">
           <button onclick="guardarProducto()" 
-                  style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+                  style="flex:1; background:var(--accent); color:#FFFFFF; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             💾 Guardar
           </button>
           <button onclick="document.getElementById('adminFormProducto').classList.add('hidden')" 
@@ -287,7 +287,7 @@
                oninput="filtrarCategoriasAdmin(this.value)"
                style="flex: 1; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 16px;">
         <button onclick="nuevaCategoria()"
-                style="background: var(--accent); color: #000; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
+                style="background: var(--accent); color: #FFFFFF; border: none; padding: 12px 22px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px;">
           ➕ Nueva
         </button>
       </div>
@@ -351,7 +351,7 @@
                      style="flex: 1; min-width: 100px; padding: 12px; background: var(--bg); border: 2px solid var(--border); border-radius: 8px; color: var(--text); font-size: 15px;"
                      onkeypress="if(event.key==='Enter'){ event.preventDefault(); agregarSubproductoDesdeCategoria(); }">
               <button onclick="agregarSubproductoDesdeCategoria()"
-                      style="background: var(--accent); color: #000; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px; white-space: nowrap;">
+                      style="background: var(--accent); color: #FFFFFF; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 15px; white-space: nowrap;">
                 ➕ Agregar
               </button>
             </div>
@@ -364,7 +364,7 @@
 
         <div style="display:flex; gap:10px; margin-top:20px;">
           <button onclick="guardarCategoria()"
-                  style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+                  style="flex:1; background:var(--accent); color:#FFFFFF; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
             💾 Guardar
           </button>
           <button onclick="document.getElementById('adminFormCategoria').classList.add('hidden')"
@@ -392,7 +392,7 @@
       <button class="modal-close" onclick="cerrarConfiguracionLetras()">✕</button>
     </div>
     <div class="modal-body">
-      <div style="background: rgba(180,255,57,0.1); border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: var(--text);">
+      <div style="background: rgba(212, 160, 23, 0.1); border-left: 4px solid var(--accent); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 14px; color: var(--text);">
         💡 Ajusta el tamaño de las letras según tu preferencia. Los cambios se aplican al instante y se guardan en la tablet.
       </div>
 
@@ -451,7 +451,7 @@
           🔄 Resetear
         </button>
         <button onclick="cerrarConfiguracionLetras()"
-                style="flex:1; background:var(--accent); color:#000; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
+                style="flex:1; background:var(--accent); color:#FFFFFF; border:none; padding:16px; border-radius:8px; font-weight:800; cursor:pointer; font-size:16px;">
           ✓ Cerrar
         </button>
       </div>
