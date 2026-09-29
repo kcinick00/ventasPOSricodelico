@@ -1,23 +1,34 @@
 /* =========================================================
-   RICODELICO - Estilos v10.0
-   Layout responsive (PC/Tablet 65-35, Celular 1 columna)
+   RICODELICO - Estilos v11.0 (Diseño Artesanal)
+   Paleta: Crema, Marrón, Verde Oliva, Mostaza
    ========================================================= */
 
 :root {
-  --bg: #0F0F0F;
-  --bg-soft: #1A1A1A;
-  --card: #1A1A1A;
-  --card-hover: #222222;
-  --border: #2A2A2A;
-  --text: #FFFFFF;
-  --text-muted: #A0A0A0;
-  --accent: #B4FF39;
-  --accent-dark: #8FD62E;
-  --accent-glow: rgba(180, 255, 57, 0.4);
-  --orange: #FF6B35;
-  --red: #FF3B30;
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
-  --shadow-md: 0 8px 24px rgba(0,0,0,0.5);
+  /* Paleta extraída de ricodelico.github.io */
+  --bg: #FDFBF7;              /* Fondo crema claro */
+  --bg-soft: #F4EFE6;         /* Fondo crema un poco más oscuro */
+  --card: #FFFFFF;            /* Tarjetas blancas */
+  --card-hover: #F9F6F0;      /* Hover de tarjetas */
+  --border: #E0D5C1;          /* Bordes color crema oscuro */
+  
+  --text: #3E2723;            /* Texto principal (marrón oscuro) */
+  --text-muted: #6D4C41;      /* Texto secundario (marrón medio) */
+  
+  --accent: #D4A017;          /* Mostaza (Dorado) - Color principal de acento */
+  --accent-dark: #B8860B;     /* Mostaza oscuro para hover */
+  --accent-glow: rgba(212, 160, 23, 0.3);
+  
+  --green: #2E7D32;           /* Verde Oliva (para totales o éxito) */
+  --green-dark: #1B5E20;
+  --orange: #D2691E;          /* Naranja/marrón para advertencias */
+  --red: #C62828;             /* Rojo para eliminar */
+  
+  --shadow-sm: 0 2px 8px rgba(62, 39, 35, 0.08);
+  --shadow-md: 0 8px 24px rgba(62, 39, 35, 0.12);
+  
+  --font-titulos: 'Bebas Neue', sans-serif; /* Para títulos grandes */
+  --font-cuerpo: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 * { box-sizing: border-box; }
@@ -42,7 +53,7 @@ html, body {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-cuerpo);
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -63,8 +74,8 @@ button, .categoria, .subproducto, .btn, input, a, [onclick] {
 /* ===== HEADER ===== */
 header {
   padding: 14px 22px 12px;
-  background: rgba(15, 15, 15, 0.98);
-  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  border-bottom: 2px solid var(--border);
   position: relative;
   flex-shrink: 0;
   z-index: 100;
@@ -73,6 +84,7 @@ header {
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
+  box-shadow: var(--shadow-sm);
 }
 
 header::before {
@@ -81,19 +93,19 @@ header::before {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--orange) 100%);
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--green) 100%);
 }
 
 .brand h1 {
   margin: 0;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   font-size: 32px;
   font-weight: 400;
   letter-spacing: 2px;
   line-height: 1;
   text-transform: uppercase;
-  color: var(--text);
+  color: var(--green);
 }
 
 .brand h1 span { color: var(--accent); }
@@ -110,7 +122,7 @@ header::before {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: var(--card);
+  background: var(--bg-soft);
   border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 8px 14px;
@@ -125,14 +137,14 @@ header::before {
 }
 
 .tasa-box input {
-  background: var(--bg);
+  background: var(--card);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 8px 12px;
   font-size: 17px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
-  color: var(--accent);
+  color: var(--green);
   width: 130px;
   text-align: right;
 }
@@ -171,7 +183,7 @@ header::before {
 }
 
 .section-title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   font-size: 24px;
   margin: 0 0 14px;
   letter-spacing: 2px;
@@ -179,6 +191,7 @@ header::before {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: var(--text);
 }
 
 .section-title::before {
@@ -224,6 +237,7 @@ header::before {
 .categoria:hover, .categoria:active {
   border-color: var(--accent);
   transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
 }
 
 .categoria-imagen {
@@ -266,13 +280,13 @@ header::before {
   top: 8px;
   right: 8px;
   background: var(--accent);
-  color: #0F0F0F;
+  color: #FFFFFF;
   font-size: 14px;
   font-weight: 900;
   padding: 4px 10px;
   border-radius: 14px;
   z-index: 2;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 /* ===== COLUMNA PEDIDO (35%) ===== */
@@ -290,6 +304,7 @@ header::before {
   border-radius: 14px;
   padding: 12px;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .dictado-row {
@@ -303,11 +318,11 @@ header::before {
   height: 50px;
   border-radius: 50%;
   background: var(--accent);
-  color: #0F0F0F;
+  color: #FFFFFF;
   border: none;
   font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(180, 255, 57, 0.4);
+  box-shadow: 0 4px 12px var(--accent-glow);
   transition: all 0.2s;
   display: flex;
   align-items: center;
@@ -324,9 +339,9 @@ header::before {
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); }
-  70% { box-shadow: 0 0 0 16px rgba(255, 59, 48, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0.7); }
+  70% { box-shadow: 0 0 0 16px rgba(198, 40, 40, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(198, 40, 40, 0); }
 }
 
 .dictado-input {
@@ -347,7 +362,7 @@ header::before {
 }
 
 .dictado-input::placeholder {
-  color: #666;
+  color: #A1887F;
   font-weight: 400;
   font-size: 15px;
 }
@@ -376,11 +391,12 @@ header::before {
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .pedido-box h2 {
   margin: 0 0 10px;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   font-size: 18px;
   font-weight: 400;
   letter-spacing: 2px;
@@ -425,15 +441,15 @@ header::before {
 }
 
 .pedido-usd {
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent);
+  font-family: var(--font-mono);
+  color: var(--green);
   font-weight: 800;
   font-size: 15px;
   white-space: nowrap;
 }
 
 .pedido-bs {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   color: var(--text-muted);
   font-weight: 700;
   font-size: 13px;
@@ -452,7 +468,7 @@ header::before {
 }
 
 .pedido-eliminar:hover {
-  background: rgba(255, 59, 48, 0.15);
+  background: rgba(198, 40, 40, 0.1);
 }
 
 .empty-msg {
@@ -470,6 +486,7 @@ header::before {
   border-radius: 14px;
   padding: 16px;
   flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
 }
 
 .total-row {
@@ -488,14 +505,14 @@ header::before {
 }
 
 .total-row .value-usd {
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent);
+  font-family: var(--font-mono);
+  color: var(--green);
   font-weight: 800;
   font-size: 22px;
 }
 
 .total-row .value-bs {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   color: var(--text);
   font-weight: 800;
   font-size: 18px;
@@ -508,7 +525,7 @@ header::before {
 }
 
 .total-row.total-final .value-bs {
-  color: var(--accent);
+  color: var(--green);
   font-size: 24px;
 }
 
@@ -527,7 +544,7 @@ header::before {
   font-size: 16px;
   font-weight: 900;
   cursor: pointer;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   letter-spacing: 2px;
   text-transform: uppercase;
   transition: all 0.2s;
@@ -535,8 +552,8 @@ header::before {
 
 .btn-primary {
   background: var(--accent);
-  color: #0F0F0F;
-  box-shadow: 0 4px 12px rgba(180, 255, 57, 0.3);
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px var(--accent-glow);
   grid-column: span 2;
 }
 
@@ -562,7 +579,7 @@ header::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(62, 39, 35, 0.8); /* Marrón oscuro translúcido */
   z-index: 10000;
   align-items: center;
   justify-content: center;
@@ -579,6 +596,7 @@ header::before {
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  box-shadow: var(--shadow-md);
 }
 
 .modal-header {
@@ -595,10 +613,10 @@ header::before {
 
 .modal-header h2 {
   margin: 0;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   font-size: 30px;
   font-weight: 400;
-  color: var(--text);
+  color: var(--green);
   letter-spacing: 2.5px;
   text-transform: uppercase;
 }
@@ -634,8 +652,8 @@ header::before {
 
 .subproducto {
   padding: 24px 18px;
-  background: rgba(180, 255, 57, 0.12);   /* 🟢 verde translúcido */
-  border: 2px solid var(--accent);        /* borde verde */
+  background: var(--bg-soft);
+  border: 2px solid var(--border);
   border-radius: 14px;
   cursor: pointer;
   text-align: center;
@@ -650,15 +668,14 @@ header::before {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  box-shadow: 0 0 0 0 rgba(180, 255, 57, 0);
 }
 
 .subproducto:hover, .subproducto:active {
-  background: var(--accent);              /* 🟢 verde sólido al tocar */
+  background: var(--accent);
   border-color: var(--accent-dark);
-  color: #0F0F0F;                         /* texto negro al tocar */
+  color: #FFFFFF;
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(180, 255, 57, 0.45);
+  box-shadow: 0 6px 20px var(--accent-glow);
 }
 
 /* ===== MODAL MONTO ===== */
@@ -667,7 +684,7 @@ header::before {
 .monto-producto {
   font-size: 20px;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--green);
   margin-bottom: 18px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -678,10 +695,10 @@ header::before {
   border: 2px solid var(--border);
   border-radius: 12px;
   padding: 18px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: 48px;
   font-weight: 900;
-  color: var(--accent);
+  color: var(--green);
   text-align: right;
   margin-bottom: 12px;
   min-height: 90px;
@@ -694,8 +711,8 @@ header::before {
 }
 
 .monto-bs-preview strong {
-  color: var(--accent);
-  font-family: 'JetBrains Mono', monospace;
+  color: var(--green);
+  font-family: var(--font-mono);
   font-size: 22px;
 }
 
@@ -716,19 +733,19 @@ header::before {
   color: var(--text);
   cursor: pointer;
   transition: all 0.1s;
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-cuerpo);
 }
 
 .teclado-numerico button:active {
   background: var(--accent);
-  color: #0F0F0F;
+  color: #FFFFFF;
   transform: scale(0.95);
 }
 
 .teclado-numerico .btn-clear {
-  background: rgba(255, 59, 48, 0.15);
+  background: rgba(198, 40, 40, 0.1);
   color: var(--red);
-  border-color: rgba(255, 59, 48, 0.3);
+  border-color: rgba(198, 40, 40, 0.3);
 }
 
 .teclado-numerico .btn-clear:active {
@@ -737,9 +754,9 @@ header::before {
 }
 
 .teclado-numerico .btn-borrar {
-  background: rgba(255, 160, 0, 0.15);
+  background: rgba(210, 105, 30, 0.1);
   color: var(--orange);
-  border-color: rgba(255, 160, 0, 0.3);
+  border-color: rgba(210, 105, 30, 0.3);
   font-size: 30px;
   font-weight: 900;
 }
@@ -763,7 +780,7 @@ header::before {
   font-size: 18px;
   font-weight: 900;
   cursor: pointer;
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-titulos);
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -775,8 +792,8 @@ header::before {
 }
 
 .btn-agregar {
-  background: var(--accent);
-  color: #0F0F0F;
+  background: var(--green);
+  color: #FFFFFF;
 }
 
 /* ===== TOAST ===== */
@@ -796,12 +813,13 @@ header::before {
   align-items: center;
   gap: 12px;
   padding: 16px 22px;
-  background: rgba(26, 26, 26, 0.98);
+  background: var(--card);
   border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   color: var(--text);
   border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-md);
   transform: translateX(120%);
   opacity: 0;
   transition: transform 0.3s, opacity 0.3s;
@@ -819,7 +837,7 @@ header::before {
   opacity: 0;
 }
 
-.toast.toast-success { border-left-color: var(--accent); }
+.toast.toast-success { border-left-color: var(--green); }
 .toast.toast-remove { border-left-color: var(--orange); }
 .toast.toast-info { border-left-color: #60A5FA; }
 
@@ -832,13 +850,13 @@ header::before {
   border-radius: 50%;
   font-size: 15px;
   font-weight: 900;
-  color: #0F0F0F;
+  color: #FFFFFF;
   flex-shrink: 0;
 }
 
-.toast-success .toast-icon { background: var(--accent); }
-.toast-remove .toast-icon { background: var(--orange); color: white; }
-.toast-info .toast-icon { background: #60A5FA; color: white; }
+.toast-success .toast-icon { background: var(--green); }
+.toast-remove .toast-icon { background: var(--orange); }
+.toast-info .toast-icon { background: #60A5FA; }
 
 /* ===== ADMIN ===== */
 .admin-lista {
@@ -856,7 +874,7 @@ header::before {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: var(--bg);
+  background: var(--bg-soft);
   border: 1.5px solid var(--border);
   border-radius: 10px;
   cursor: pointer;
@@ -867,6 +885,7 @@ header::before {
 .admin-categoria-item:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+  background: var(--card);
 }
 
 .admin-producto-item img,
@@ -876,7 +895,7 @@ header::before {
   height: 60px;
   object-fit: cover;
   border-radius: 10px;
-  background: var(--bg-soft);
+  background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -910,7 +929,7 @@ header::before {
 .admin-producto-precio {
   font-size: 15px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--green);
 }
 
 .badge-iva, .badge-exento {
@@ -920,8 +939,8 @@ header::before {
   margin-left: 5px;
 }
 
-.badge-iva { background: #ffcccc; color: #cc0000; }
-.badge-exento { background: #ffffcc; color: #999900; }
+.badge-iva { background: #FFCDD2; color: #B71C1C; }
+.badge-exento { background: #FFF9C4; color: #F57F17; }
 
 .btn-eliminar-admin {
   background: transparent;
@@ -933,12 +952,12 @@ header::before {
 }
 
 .btn-eliminar-admin:hover {
-  background: rgba(255, 0, 0, 0.1);
+  background: rgba(198, 40, 40, 0.1);
 }
 
 /* ===== HISTÓRICO DE FACTURAS ===== */
 .factura-card {
-  background: var(--bg);
+  background: var(--bg-soft);
   border: 1.5px solid var(--border);
   border-radius: 12px;
   padding: 16px;
@@ -949,6 +968,7 @@ header::before {
 .factura-card:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
+  background: var(--card);
 }
 
 .factura-card-header {
@@ -961,8 +981,8 @@ header::before {
 .factura-numero {
   font-weight: 900;
   font-size: 18px;
-  color: var(--accent);
-  font-family: 'JetBrains Mono', monospace;
+  color: var(--green);
+  font-family: var(--font-mono);
 }
 
 .factura-hora {
@@ -979,14 +999,14 @@ header::before {
 }
 
 .factura-total-usd {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--green);
   font-size: 19px;
 }
 
 .factura-total-bs {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text);
   font-size: 15px;
@@ -1041,7 +1061,7 @@ input[type="range"]::-webkit-slider-thumb {
   background: var(--accent);
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
+  box-shadow: 0 2px 8px var(--accent-glow);
   transition: all 0.2s;
 }
 
@@ -1056,7 +1076,7 @@ input[type="range"]::-moz-range-thumb {
   border-radius: 50%;
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 8px rgba(180, 255, 57, 0.5);
+  box-shadow: 0 2px 8px var(--accent-glow);
 }
 
 /* =========================================================
@@ -1275,8 +1295,8 @@ input[type="range"]::-moz-range-thumb {
 
 .admin-sub-input-precio {
   text-align: right;
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--accent);
+  font-family: var(--font-mono);
+  color: var(--green);
 }
 
 .admin-sub-input-orden {
@@ -1285,7 +1305,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .admin-sub-btn-eliminar {
-  background: rgba(255, 59, 48, 0.15);
+  background: rgba(198, 40, 40, 0.1);
   color: var(--red);
   border: none;
   padding: 8px;
