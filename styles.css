@@ -1332,3 +1332,582 @@ input[type="range"]::-moz-range-thumb {
     padding: 10px;
   }
 }
+
+
+/* =========================================================
+   RICODÉLICO POS — REDISEÑO PROFESIONAL
+   Dirección visual:
+   editorial artesanal + charcutería premium + POS moderno.
+   No modifica la lógica JavaScript.
+   ========================================================= */
+
+:root {
+  --bg: #f5f1e8 !important;
+  --bg-soft: #ebe4d6 !important;
+  --card: #fffdf8 !important;
+  --card-hover: #ffffff !important;
+  --border: #d8cdbb !important;
+  --text: #2c2924 !important;
+  --text-muted: #766f64 !important;
+  --accent: #b68a3b !important;
+  --accent-dark: #8f6a2c !important;
+  --accent-glow: rgba(182,138,59,.22) !important;
+  --green: #3f5947 !important;
+  --green-dark: #293d30 !important;
+  --orange: #b86b35 !important;
+  --red: #a94a3e !important;
+  --shadow-sm: 0 3px 14px rgba(52,43,30,.07) !important;
+  --shadow-md: 0 16px 40px rgba(52,43,30,.13) !important;
+  --shadow-lg: 0 25px 70px rgba(52,43,30,.18) !important;
+  --font-titulos: 'Bebas Neue', sans-serif !important;
+  --font-cuerpo: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+}
+
+/* Base / textura */
+body.ricodelico-pro {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(182,138,59,.08), transparent 26%),
+    radial-gradient(circle at 88% 92%, rgba(63,89,71,.07), transparent 30%),
+    var(--bg) !important;
+  color: var(--text) !important;
+  letter-spacing: .01em;
+}
+
+body.ricodelico-pro::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .20;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(70,55,35,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70,55,35,.018) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Scrollbars */
+body.ricodelico-pro ::-webkit-scrollbar { width: 8px; height: 8px; }
+body.ricodelico-pro ::-webkit-scrollbar-track { background: transparent; }
+body.ricodelico-pro ::-webkit-scrollbar-thumb {
+  background: #cbbda8;
+  border-radius: 99px;
+}
+body.ricodelico-pro ::-webkit-scrollbar-thumb:hover { background: #b9a98f; }
+
+/* Header */
+body.ricodelico-pro header {
+  min-height: 94px;
+  padding: 12px 26px 12px;
+  background: rgba(255,253,248,.94) !important;
+  border-bottom: 1px solid rgba(122,100,68,.18) !important;
+  box-shadow: 0 8px 26px rgba(52,43,30,.07) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.ricodelico-pro header::before {
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--accent), var(--green)) !important;
+}
+
+body.ricodelico-pro header .brand {
+  gap: 14px !important;
+}
+
+body.ricodelico-pro header .brand img {
+  height: 66px !important;
+  filter: drop-shadow(0 5px 9px rgba(50,40,25,.10));
+}
+
+body.ricodelico-pro header .brand p {
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: .13em !important;
+  text-transform: uppercase;
+  color: #877c6d !important;
+}
+
+body.ricodelico-pro .tasa-box {
+  background: #f2ede2 !important;
+  border: 1px solid #d8cdbb !important;
+  border-radius: 999px !important;
+  padding: 6px 8px 6px 14px !important;
+  box-shadow: none !important;
+}
+
+body.ricodelico-pro .tasa-box label {
+  font-size: 10px !important;
+  letter-spacing: .13em !important;
+  color: #716858 !important;
+}
+
+body.ricodelico-pro .tasa-box input {
+  width: 112px !important;
+  padding: 7px 10px !important;
+  border: 1px solid #d8cdbb !important;
+  border-radius: 999px !important;
+  background: #fffdf8 !important;
+  color: var(--green) !important;
+}
+
+body.ricodelico-pro header > div:last-child > button {
+  background: #fffdf8 !important;
+  border: 1px solid #d8cdbb !important;
+  color: #514a40 !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 8px rgba(50,40,25,.05);
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+body.ricodelico-pro header > div:last-child > button:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent) !important;
+  box-shadow: 0 7px 18px rgba(50,40,25,.10);
+}
+
+/* Main layout */
+body.ricodelico-pro .layout {
+  grid-template-columns: minmax(0, 1.7fr) minmax(340px, .85fr) !important;
+  gap: 24px !important;
+  padding: 24px 26px !important;
+  max-width: 1700px !important;
+}
+
+body.ricodelico-pro .section-title {
+  font-size: 28px !important;
+  letter-spacing: .11em !important;
+  color: var(--green) !important;
+  margin-bottom: 18px !important;
+}
+
+body.ricodelico-pro .section-title::before {
+  width: 4px !important;
+  height: 30px !important;
+  border-radius: 99px !important;
+  background: var(--accent) !important;
+}
+
+body.ricodelico-pro .section-title::after {
+  background: linear-gradient(90deg, #d9cdbb, transparent) !important;
+}
+
+/* Category cards: premium product-card feel */
+body.ricodelico-pro .categorias-grid {
+  grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)) !important;
+  gap: 17px !important;
+}
+
+body.ricodelico-pro .categoria {
+  min-height: 206px !important;
+  border: 1px solid rgba(126,104,72,.22) !important;
+  border-radius: 20px !important;
+  background: rgba(255,253,248,.93) !important;
+  box-shadow: 0 5px 18px rgba(55,45,31,.07) !important;
+  transition: transform .22s cubic-bezier(.2,.8,.2,1),
+              box-shadow .22s ease, border-color .22s ease !important;
+}
+
+body.ricodelico-pro .categoria:hover,
+body.ricodelico-pro .categoria:active {
+  transform: translateY(-5px) !important;
+  border-color: rgba(182,138,59,.7) !important;
+  box-shadow: 0 16px 30px rgba(55,45,31,.13) !important;
+}
+
+body.ricodelico-pro .categoria-imagen {
+  height: 148px !important;
+  background: linear-gradient(145deg, #eee6d8, #f9f5ed) !important;
+}
+
+body.ricodelico-pro .categoria-imagen img {
+  transition: transform .45s ease, filter .45s ease;
+}
+
+body.ricodelico-pro .categoria:hover .categoria-imagen img {
+  transform: scale(1.045);
+  filter: saturate(1.05);
+}
+
+body.ricodelico-pro .categoria-imagen::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 60%, rgba(45,36,24,.10));
+  pointer-events: none;
+}
+
+body.ricodelico-pro .categoria-imagen .categoria-emoji {
+  font-size: 58px !important;
+  filter: drop-shadow(0 7px 8px rgba(50,40,25,.12));
+}
+
+body.ricodelico-pro .categoria-nombre {
+  padding: 13px 10px 15px !important;
+  background: transparent !important;
+  color: var(--text) !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  letter-spacing: .045em !important;
+  text-transform: uppercase;
+}
+
+body.ricodelico-pro .categoria-count {
+  top: 10px !important;
+  right: 10px !important;
+  background: rgba(255,253,248,.94) !important;
+  color: var(--green) !important;
+  border: 1px solid rgba(63,89,71,.20);
+  padding: 4px 9px !important;
+  border-radius: 999px !important;
+  box-shadow: 0 4px 12px rgba(45,36,24,.10) !important;
+}
+
+/* Right order column */
+body.ricodelico-pro .col-pedido {
+  gap: 14px !important;
+}
+
+body.ricodelico-pro .dictado-box,
+body.ricodelico-pro .pedido-box,
+body.ricodelico-pro .totales-box {
+  border: 1px solid rgba(126,104,72,.20) !important;
+  border-radius: 20px !important;
+  background: rgba(255,253,248,.95) !important;
+  box-shadow: 0 5px 18px rgba(55,45,31,.065) !important;
+}
+
+body.ricodelico-pro .dictado-box {
+  padding: 14px !important;
+}
+
+body.ricodelico-pro .voice-btn {
+  background: var(--green) !important;
+  box-shadow: 0 7px 18px rgba(63,89,71,.20) !important;
+  width: 48px !important;
+  height: 48px !important;
+}
+
+body.ricodelico-pro .dictado-input {
+  background: #f7f2e8 !important;
+  border: 1px solid #d9cebd !important;
+  border-radius: 13px !important;
+  color: var(--text) !important;
+  font-size: 15px !important;
+}
+
+body.ricodelico-pro .dictado-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(182,138,59,.10);
+}
+
+body.ricodelico-pro .dictado-hint {
+  font-size: 11px !important;
+  color: #877d70 !important;
+}
+
+/* Order */
+body.ricodelico-pro .pedido-box {
+  padding: 18px !important;
+}
+
+body.ricodelico-pro .pedido-box h2 {
+  font-size: 22px !important;
+  letter-spacing: .10em !important;
+  color: var(--green) !important;
+}
+
+body.ricodelico-pro .pedido-item {
+  padding: 12px 4px !important;
+  border-bottom: 1px solid #e7dfd2 !important;
+}
+
+body.ricodelico-pro .pedido-nombre {
+  font-size: 14px !important;
+}
+
+body.ricodelico-pro .pedido-usd {
+  color: var(--green) !important;
+}
+
+body.ricodelico-pro .pedido-eliminar {
+  color: #9f6258 !important;
+}
+
+body.ricodelico-pro .empty-msg {
+  color: #9a9082 !important;
+}
+
+/* Totals — stronger visual hierarchy */
+body.ricodelico-pro .totales-box {
+  padding: 17px 19px !important;
+  background: var(--green) !important;
+  border-color: var(--green) !important;
+  color: white !important;
+}
+
+body.ricodelico-pro .totales-box .label {
+  color: rgba(255,255,255,.70) !important;
+  font-size: 10px !important;
+  letter-spacing: .15em !important;
+}
+
+body.ricodelico-pro .totales-box .value-usd,
+body.ricodelico-pro .totales-box .value-bs {
+  color: white !important;
+}
+
+body.ricodelico-pro .totales-box .value-usd {
+  font-size: 23px !important;
+}
+
+body.ricodelico-pro .totales-box .value-bs {
+  font-size: 25px !important;
+}
+
+body.ricodelico-pro .total-row.total-final {
+  border-top-color: rgba(255,255,255,.20) !important;
+}
+
+/* Bottom buttons */
+body.ricodelico-pro .botones-box {
+  gap: 9px !important;
+}
+
+body.ricodelico-pro .btn {
+  border-radius: 12px !important;
+  font-family: var(--font-cuerpo) !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .10em !important;
+}
+
+body.ricodelico-pro .btn-primary {
+  background: var(--accent) !important;
+  box-shadow: 0 8px 20px rgba(182,138,59,.20) !important;
+}
+
+body.ricodelico-pro .btn-primary:hover {
+  background: var(--accent-dark) !important;
+  transform: translateY(-1px);
+}
+
+body.ricodelico-pro .btn-secondary {
+  background: rgba(255,253,248,.7) !important;
+  border: 1px solid #d6c9b5 !important;
+  color: #685f53 !important;
+}
+
+body.ricodelico-pro .btn-secondary:hover {
+  background: #fffdf8 !important;
+  border-color: var(--accent) !important;
+  color: var(--accent-dark) !important;
+}
+
+/* Modal system */
+body.ricodelico-pro .modal-overlay {
+  background: rgba(40,34,27,.60) !important;
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+body.ricodelico-pro .modal-content {
+  border: 1px solid rgba(126,104,72,.24) !important;
+  border-radius: 24px !important;
+  background: #fffdf8 !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+body.ricodelico-pro .modal-header {
+  padding: 20px 24px !important;
+  background: rgba(255,253,248,.97) !important;
+  border-bottom: 1px solid #e4dbce !important;
+}
+
+body.ricodelico-pro .modal-header h2 {
+  font-size: 28px !important;
+  color: var(--green) !important;
+  letter-spacing: .09em !important;
+}
+
+body.ricodelico-pro .modal-close {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: #f3ede3 !important;
+  border: 1px solid #ded2c1 !important;
+  font-size: 18px !important;
+}
+
+body.ricodelico-pro .modal-close:hover {
+  background: #f4e2de !important;
+  border-color: var(--red) !important;
+}
+
+/* Product choices */
+body.ricodelico-pro .subproductos-lista {
+  gap: 12px !important;
+}
+
+body.ricodelico-pro .subproducto {
+  min-height: 112px !important;
+  padding: 20px 14px !important;
+  border: 1px solid #d9cebd !important;
+  border-radius: 16px !important;
+  background: #f8f3ea !important;
+  color: var(--text) !important;
+  font-size: 17px !important;
+  box-shadow: 0 3px 9px rgba(55,45,31,.04);
+}
+
+body.ricodelico-pro .subproducto:hover,
+body.ricodelico-pro .subproducto:active {
+  background: var(--green) !important;
+  border-color: var(--green) !important;
+  box-shadow: 0 10px 22px rgba(63,89,71,.18) !important;
+  transform: translateY(-3px);
+}
+
+/* Numeric keypad */
+body.ricodelico-pro .monto-display {
+  background: #f5f0e7 !important;
+  border: 1px solid #d8cdbb !important;
+  border-radius: 16px !important;
+  color: var(--green) !important;
+}
+
+body.ricodelico-pro .teclado-numerico {
+  gap: 9px !important;
+}
+
+body.ricodelico-pro .teclado-numerico button {
+  border: 1px solid #d8cdbb !important;
+  border-radius: 14px !important;
+  background: #faf7f0 !important;
+  color: var(--text) !important;
+  box-shadow: 0 2px 5px rgba(50,40,25,.04);
+}
+
+body.ricodelico-pro .teclado-numerico button:active {
+  background: var(--green) !important;
+  color: white !important;
+}
+
+/* Admin cards */
+body.ricodelico-pro .admin-producto-item,
+body.ricodelico-pro .admin-categoria-item,
+body.ricodelico-pro .admin-subproducto-item {
+  border: 1px solid #d9cebd !important;
+  border-radius: 14px !important;
+  background: #f8f3ea !important;
+}
+
+body.ricodelico-pro .admin-producto-item:hover,
+body.ricodelico-pro .admin-categoria-item:hover,
+body.ricodelico-pro .admin-subproducto-item:hover {
+  background: #fffdf8 !important;
+  border-color: rgba(182,138,59,.7) !important;
+  box-shadow: 0 7px 18px rgba(55,45,31,.08);
+}
+
+/* Form controls, including inline-styled controls in the existing HTML */
+body.ricodelico-pro input:not([type="range"]):not([type="checkbox"]),
+body.ricodelico-pro select {
+  border-color: #d8cdbb !important;
+  background: #faf7f0 !important;
+  color: var(--text) !important;
+  border-radius: 11px !important;
+}
+
+body.ricodelico-pro input:not([type="range"]):not([type="checkbox"]):focus,
+body.ricodelico-pro select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(182,138,59,.09);
+}
+
+/* Toast */
+body.ricodelico-pro .toast {
+  border: 1px solid #ded2c1 !important;
+  border-left: 4px solid var(--accent) !important;
+  border-radius: 14px !important;
+  background: #fffdf8 !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Range */
+body.ricodelico-pro input[type="range"] {
+  accent-color: var(--accent);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  body.ricodelico-pro .layout {
+    padding: 18px 16px !important;
+  }
+  body.ricodelico-pro .categorias-grid {
+    grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)) !important;
+  }
+  body.ricodelico-pro .categoria {
+    min-height: 178px !important;
+  }
+  body.ricodelico-pro .categoria-imagen {
+    height: 120px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  body.ricodelico-pro header {
+    padding: 10px 12px !important;
+    min-height: 76px;
+  }
+  body.ricodelico-pro header .brand img {
+    height: 50px !important;
+  }
+  body.ricodelico-pro header .brand p {
+    display: none;
+  }
+  body.ricodelico-pro .layout {
+    padding: 14px 12px !important;
+    gap: 16px !important;
+  }
+  body.ricodelico-pro .section-title {
+    font-size: 23px !important;
+  }
+  body.ricodelico-pro .categorias-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 11px !important;
+  }
+  body.ricodelico-pro .categoria {
+    min-height: 160px !important;
+    border-radius: 15px !important;
+  }
+  body.ricodelico-pro .categoria-imagen {
+    height: 102px !important;
+  }
+  body.ricodelico-pro .categoria-nombre {
+    padding: 10px 5px 11px !important;
+    font-size: 12px !important;
+  }
+  body.ricodelico-pro .pedido-box,
+  body.ricodelico-pro .dictado-box,
+  body.ricodelico-pro .totales-box {
+    border-radius: 17px !important;
+  }
+  body.ricodelico-pro .modal-content {
+    border-radius: 20px !important;
+  }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  body.ricodelico-pro *,
+  body.ricodelico-pro *::before,
+  body.ricodelico-pro *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
