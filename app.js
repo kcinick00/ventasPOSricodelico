@@ -53,98 +53,111 @@ function showToast(message, type = "success") {
 // =========================================================
 // TASA BCV
 // =========================================================
+// Fecha local (Caracas) en YYYY-MM-DD. toISOString() usa UTC y desde las 8pm
+// ya devuelve el día siguiente.
+function fechaLocalISO(d = new Date()) {
+  const p = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+let cargandoTasa = false;
+
 async function cargarTasa() {
-  const inputTasa = document.getElementById("tasa-bcv");
-  const ultimaTasa = localStorage.getItem("ricodelico_tasa");
-  const ultimaFecha = localStorage.getItem("ricodelico_fecha_tasa");
-
-  if (ultimaTasa && ultimaFecha) {
-    inputTasa.value = parseFloat(ultimaTasa).toFixed(2);
-    tasaBCV = parseFloat(ultimaTasa);
-    tasaActual = tasaBCV;
-  }
-
-  let tasaSupabase = null;
-  let fechaSupabase = null;
-
+  if (cargandoTasa) return;
+  cargandoTasa = true;
   try {
-    if (supabaseClient) {
-      const { data, error } = await supabaseClient
-        .from('tasa_bcv')
-        .select('*')
-        .eq('id', 1)
-        .single();
+    const inputTasa = document.getElementById("tasa-bcv");
+    const ultimaTasa = localStorage.getItem("ricodelico_tasa");
+    const ultimaFecha = localStorage.getItem("ricodelico_fecha_tasa");
 
-      if (!error && data && data.tasa > 0) {
-        tasaSupabase = parseFloat(data.tasa);
-        fechaSupabase = data.fecha || 'Sin fecha';
-        console.log(`✅ Tasa en Supabase: ${tasaSupabase} (${fechaSupabase})`);
+    // Valor local solo como respaldo inicial mientras se consulta la red
+    if (!tasaBCV && ultimaTasa && ultimaFecha) {
+      tasaBCV = parseFloat(ultimaTasa);
+      tasaActual = tasaBCV;
+      if (inputTasa) inputTasa.value = tasaBCV.toFixed(2);
+    }
+
+    // 1) Siempre consultar las APIs primero (ya no se confía en una tasa de hasta 2 días)
+    const apis = [
+      { name: 'DolarAPI', url: 'https://ve.dolarapi.com/v1/dolares/oficial',
+        parse: d => d && d.promedio ? {
+          tasa: parseFloat(d.promedio),
+          fecha: d.fechaActualizacion ? new Date(d.fechaActualizacion) : new Date()
+        } : null },
+      { name: 'CriptoYa', url: 'https://criptoya.com/api/dolaroficial',
+        parse: d => d && d.bcv && d.bcv.price ? { tasa: parseFloat(d.bcv.price), fecha: new Date() } : null }
+    ];
+
+    for (const api of apis) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const resp = await fetch(api.url, { signal: controller.signal, cache: 'no-store' });
+        clearTimeout(timeoutId);
+
+        if (!resp.ok) continue;
+        const data = await resp.json();
+        const resultado = api.parse(data);
+
+        if (resultado && resultado.tasa > 0) {
+          if (isNaN(resultado.fecha)) resultado.fecha = new Date();
+          const fechaStr = resultado.fecha.toLocaleString('es-VE', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          });
+
+          try {
+            if (supabaseClient) {
+              await supabaseClient.from('tasa_bcv').upsert({
+                id: 1, tasa: resultado.tasa, fecha: fechaStr,
+                updated_at: new Date().toISOString()
+              });
+            }
+          } catch (e) {}
+
+          aplicarTasa(resultado.tasa, fechaStr);
+          return;
+        }
+      } catch (e) {
+        console.warn(`⚠️ ${api.name} falló:`, e.message);
       }
     }
-  } catch (e) {
-    console.warn('⚠️ Supabase tasa:', e.message);
-  }
 
-  let tasaEsReciente = false;
-  if (fechaSupabase && fechaSupabase !== 'Sin fecha') {
+    // 2) Si las APIs fallan, usar la última tasa guardada en Supabase
     try {
-      const [fechaParte] = fechaSupabase.split(',');
-      const [dia, mes, anio] = fechaParte.trim().split('/').map(Number);
-      const fechaTasa = new Date(anio, mes - 1, dia);
-      const diffDias = Math.floor((new Date() - fechaTasa) / (1000 * 60 * 60 * 24));
-      if (diffDias <= 2) tasaEsReciente = true;
-    } catch (e) {}
-  }
-
-  if (tasaSupabase && tasaEsReciente) {
-    aplicarTasa(tasaSupabase, fechaSupabase);
-    return;
-  }
-
-  const apis = [
-    { name: 'DolarAPI', url: 'https://ve.dolarapi.com/v1/dolares/oficial',
-      parse: d => d && d.promedio ? { tasa: parseFloat(d.promedio), fecha: new Date() } : null },
-    { name: 'CriptoYa', url: 'https://criptoya.com/api/dolaroficial',
-      parse: d => d && d.bcv && d.bcv.price ? { tasa: parseFloat(d.bcv.price), fecha: new Date() } : null }
-  ];
-
-  for (const api of apis) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000);
-      const resp = await fetch(api.url, { signal: controller.signal, cache: 'no-cache' });
-      clearTimeout(timeoutId);
-
-      if (!resp.ok) continue;
-      const data = await resp.json();
-      const resultado = api.parse(data);
-
-      if (resultado && resultado.tasa > 0) {
-        const fechaStr = resultado.fecha.toLocaleString('es-VE', {
-          day: '2-digit', month: '2-digit', year: 'numeric',
-          hour: '2-digit', minute: '2-digit'
-        });
-
-        try {
-          if (supabaseClient) {
-            await supabaseClient.from('tasa_bcv').upsert({
-              id: 1, tasa: resultado.tasa, fecha: fechaStr,
-              updated_at: new Date().toISOString()
-            });
-          }
-        } catch (e) {}
-
-        aplicarTasa(resultado.tasa, fechaStr);
-        return;
+      if (supabaseClient) {
+        const { data, error } = await supabaseClient
+          .from('tasa_bcv').select('*').eq('id', 1).single();
+        if (!error && data && data.tasa > 0) {
+          const t = parseFloat(data.tasa);
+          const actualizado = data.updated_at ? new Date(data.updated_at) : null;
+          const esDeHoy = actualizado && fechaLocalISO(actualizado) === fechaLocalISO();
+          aplicarTasa(t, (data.fecha || 'Sin fecha') + (esDeHoy ? '' : ' (vieja)'));
+          if (!esDeHoy) showToast("⚠️ No se pudo actualizar la tasa BCV. Verifica la tasa manualmente.", "remove");
+          return;
+        }
       }
     } catch (e) {
-      console.warn(`⚠️ ${api.name} falló:`, e.message);
+      console.warn('⚠️ Supabase tasa:', e.message);
     }
-  }
 
-  if (tasaSupabase) {
-    aplicarTasa(tasaSupabase, fechaSupabase + ' (vieja)');
+    // 3) Último recurso: la tasa local; avisar que puede estar desactualizada
+    if (tasaBCV > 0) {
+      showToast("⚠️ Sin conexión: usando la última tasa guardada (" + tasaBCV.toFixed(2) + "). Verifícala.", "remove");
+    }
+  } finally {
+    cargandoTasa = false;
   }
+}
+
+// Refrescar la tasa sin recargar la página: cada 30 min, al volver a la
+// pestaña/app y al recuperar internet.
+function iniciarAutoActualizacionTasa() {
+  setInterval(cargarTasa, 30 * 60 * 1000);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') cargarTasa();
+  });
+  window.addEventListener('online', cargarTasa);
 }
 
 function aplicarTasa(tasa, fechaStr) {
@@ -718,7 +731,7 @@ function cargarHistorial() {
 }
 
 async function abrirHistorial() {
-  const hoy = new Date().toISOString().split('T')[0];
+  const hoy = fechaLocalISO();
   document.getElementById("filtro-fecha-historial").value = hoy;
   await cargarHistorialPorFecha(hoy);
   document.getElementById("modal-historial").classList.add("active");
@@ -729,7 +742,7 @@ async function cargarHistorialPorFecha(fechaISO) {
   lista.innerHTML = '<div class="empty-msg" style="text-align: center; padding: 20px; color: #888;">Cargando...</div>';
 
   if (!fechaISO) {
-    fechaISO = new Date().toISOString().split('T')[0];
+    fechaISO = fechaLocalISO();
     document.getElementById("filtro-fecha-historial").value = fechaISO;
   }
 
@@ -998,6 +1011,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   console.log("🚀 POS Ricodelico iniciado");
 
   await cargarTasa();
+  iniciarAutoActualizacionTasa();
   await cargarProductos();
   cargarHistorial();
   renderPedido();

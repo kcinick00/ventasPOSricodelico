@@ -1,4 +1,4 @@
-const CACHE_NAME = "ricodelico-caja-v3.6";
+const CACHE_NAME = "ricodelico-caja-v3.7";
 const FILES_TO_CACHE = [
   "index.html", "app.js", "voice.js", "productos.js",
   "admin-productos.js", "supabase.js", "styles.css", "manifest.json"
@@ -29,7 +29,14 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   
+  // Red primero (siempre código actualizado); caché solo si no hay internet
   event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request))
+    fetch(event.request).then((resp) => {
+      if (resp && resp.ok && event.request.method === 'GET') {
+        const copia = resp.clone();
+        caches.open(CACHE_NAME).then((c) => c.put(event.request, copia));
+      }
+      return resp;
+    }).catch(() => caches.match(event.request))
   );
 });
