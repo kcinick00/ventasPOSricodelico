@@ -1008,6 +1008,8 @@ async function buscarPorCodigoBarras(codigo) {
 // INICIALIZACIÓN
 // =========================================================
 document.addEventListener("DOMContentLoaded", async () => {
+  // 🔐 Esperar a que haya sesión iniciada antes de cargar datos
+  if (window.GestoreAuth) await window.GestoreAuth.listo;
   console.log("🚀 POS Ricodelico iniciado");
 
   await cargarTasa();

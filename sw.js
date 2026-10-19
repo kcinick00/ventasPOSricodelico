@@ -1,7 +1,7 @@
-const CACHE_NAME = "ricodelico-caja-v3.7";
+const CACHE_NAME = "ricodelico-caja-v3.8";
 const FILES_TO_CACHE = [
   "index.html", "app.js", "voice.js", "productos.js",
-  "admin-productos.js", "supabase.js", "styles.css", "manifest.json"
+  "admin-productos.js", "supabase.js", "auth-ui.js", "styles.css", "manifest.json"
 ];
 
 self.addEventListener("install", (event) => {
